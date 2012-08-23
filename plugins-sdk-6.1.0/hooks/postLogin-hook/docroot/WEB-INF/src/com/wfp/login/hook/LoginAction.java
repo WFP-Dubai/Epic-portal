@@ -31,7 +31,7 @@ public class LoginAction extends Action
 	{
 		System.out.println("## My custom login action");
 
-		Long userId = PortalUtil.getUserId(request);
+		/*Long userId = PortalUtil.getUserId(request);
 		
 		Long userID = (Long) request.getSession().getAttribute(com.liferay.portal.kernel.util.WebKeys.USER_ID);
 		
@@ -108,7 +108,7 @@ public class LoginAction extends Action
 		else
 		{
 			System.out.println(" UserId is : "+userId + " so unable to proceed");
-		}
+		}*/
 	}
 
 	public static String getUserCountry() throws Exception {

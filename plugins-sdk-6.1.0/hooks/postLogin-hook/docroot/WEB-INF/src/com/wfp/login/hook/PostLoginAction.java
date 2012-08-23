@@ -1,6 +1,7 @@
 package com.wfp.login.hook;
 
 import com.liferay.portal.kernel.events.Action;
+import com.liferay.portal.kernel.events.ActionException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URL;
@@ -27,35 +28,37 @@ public class PostLoginAction extends Action
 
 	private static final String UPDATE_IP = "update user_ set lastloginip=?  where userid=?";
 	private static final String UPDATE_LOC = "update user_ set  location=? where userid=?";
-
-	public void run(HttpServletRequest request, HttpServletResponse res)
+	 @Override
+	public void run(HttpServletRequest request, HttpServletResponse res)throws ActionException 
 	{
 		System.out.println("## PostLoginAction : My custom login action");
 		
 
 		Long userId = PortalUtil.getUserId(request);
 		
-		Long userID = (Long) request.getSession().getAttribute(com.liferay.portal.kernel.util.WebKeys.USER_ID);
+		/*Long userID = (Long) request.getSession().getAttribute(com.liferay.portal.kernel.util.WebKeys.USER_ID);
 		
-		//User user = UserLocalServiceUtil.getUserById(userId.longValue());
+		//User user = UserLocalServiceUtil.getUserById(userId.longValue());*/
 		
-		System.out.println(" PostLoginAction :  userId : "+userId+ "userID :"+userID );
+		System.out.println(" PostLoginAction :  userId : "+userId);
+		System.out.println("***********************************");
+	       System.out.println("Hey Buddy U Post Login Now"+new Date());
+	       System.out.println("***********************************");
 		
 		
-		
-		Object isSet = request.getSession().getAttribute("isSet");
+		//Object isSet = request.getSession().getAttribute("isSet");
 
 		if (userId != null && userId > 0 ) 
 		{
 
-			System.out.println(" PostLoginAction : forwarded : "
+			System.out.println(" userId :"+userId+" : PostLoginAction : forwarded : "
 					+ request.getHeader("x-forwarded-for"));
 
 			Connection con = null;
 			PreparedStatement ps = null;
 			ResultSet rs = null;
 
-			try 
+			/*try 
 			{
 				ClassLoader classLoader = getClass().getClassLoader();
 
@@ -114,7 +117,7 @@ public class PostLoginAction extends Action
 					}
 				} catch (Exception e) {
 				}
-			}
+			}*/
 		}
 		else
 		{

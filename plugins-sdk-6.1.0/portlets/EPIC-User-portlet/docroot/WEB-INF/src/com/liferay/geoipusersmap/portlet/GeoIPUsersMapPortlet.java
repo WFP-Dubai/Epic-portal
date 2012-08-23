@@ -115,7 +115,7 @@ public class GeoIPUsersMapPortlet extends MVCPortlet  {
 		String actionType = null;
 		Object actOnj = renderRequest.getParameter("actionType");
 		System.out.println(" !!!!actOnj :"+actOnj );
-		if( actOnj!= null ) { actionType = actOnj.toString(); 	System.out.println(" !!!!!"+actionType ); }
+		if( actOnj!= null ) { actionType = actOnj.toString(); 	System.out.println(" !!!!!"+actionType ); 
 		String code=null;
 		if( userId!=null && userId!="0")
 		{
@@ -140,11 +140,19 @@ public class GeoIPUsersMapPortlet extends MVCPortlet  {
 			portletSession.setAttribute("code-"+userId,code,  PortletSession.APPLICATION_SCOPE);
 		
 		}
+		else if( actionType.equals("changeCountryLinks") )
+		{
+			System.out.println(" !!!!!!!!!!!!!!!!!!!!!!!MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM!!!!!!!!!!!!!!!!!!!!!!!! ");
+			renderRequest.setAttribute("mappingBean"+userId,renderRequest.getParameter("mappingBean"+userId ));
+			System.out.println(" !!!!!!!!!!!!!!!!!!!!!!!MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM!!!!!!! ");
+			
+		}
 		else //if( ( actionType!= null ) && ( actionType.equals("updateIP")|| actionType!= null && actionType.equals("changeLocation") ) )
 		{
 			renderRequest.setAttribute("Location",renderRequest.getParameter("Location"+userId ));
 			renderRequest.setAttribute("code",renderRequest.getParameter("code-"+userId ));
 			System.out.println(" 999999  !!!!!"+actionType+ " : "+ renderRequest.getParameter("Location" ) + ": "+renderRequest.getParameter("code" ) ); 
+		}
 		}
 			//renderRequest.getPortletSession().setAttribute("City-"+user.getUserId(),"Dubai" , PortletSession.APPLICATION_SCOPE);
 		
@@ -174,7 +182,7 @@ public class GeoIPUsersMapPortlet extends MVCPortlet  {
 		String userId = actionRequest.getRemoteUser();
 		
 		String ip = null;
-
+		
 		if (cmd.equals("changeLocation")) 
 		{
 			String code = ParamUtil.getString( actionRequest, "code");

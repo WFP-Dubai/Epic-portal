@@ -141,8 +141,10 @@ public class IPUserPortlet extends MVCPortlet  {
 
 		String cmd = ParamUtil.getString(actionRequest, Constants.CMD);		
 		System.out.println(" !!!!!!!!!!!!!!!cmd    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "+ cmd );
-		
 		String userId = actionRequest.getRemoteUser();
+		Object sessionObj = portletSession.setAttribute("ip-"+userId, ip, PortletSession.APPLICATION_SCOPE );
+		
+		
 
 		if (cmd.equals("changeLocation")) 
 		{
@@ -165,7 +167,7 @@ public class IPUserPortlet extends MVCPortlet  {
 			System.out.println(" #####if code "+ code + " : cName "+ cName + " ctryName : " +ctryName+ " obj : "+ portletSession.getAttribute("ip-"+userId,  PortletSession.APPLICATION_SCOPE ));
 			
 		}
-		if (cmd.equals("updateIP")&& userId != "0" && userId!= null && portletSession.getAttribute("ip-"+userId,  PortletSession.APPLICATION_SCOPE )==null ) 
+		if (cmd.equals("updateIP")&& userId != "0" && userId!= null && sessionObj==null ) 
 		{
 			String ip = ParamUtil.getString( actionRequest, "ip");
 			System.out.println( " ip from jsonip : "+ip );
@@ -174,12 +176,19 @@ public class IPUserPortlet extends MVCPortlet  {
 			Location location = null;
 			
 			
-			//location = service.getLocation( ip.trim() );				
-			String userDetails = getUserDetailsByIP( ip );			
-			Location userLocation = new Location();
+			//location = service.getLocation( ip.trim() );
+			
+			Location userLocation = null;
+			int i=0;
+			do
+			{
+			String userDetails = getUserDetailsByIP( ip );		
+			
+			userLocation = new Location();
 			
 			if( userDetails!=null )
-			{					
+			{	
+			
 				String[] userArray = userDetails.split(";");						
 				userLocation.countryCode =userArray[3];
 				userLocation.countryName =userArray[4];
@@ -188,20 +197,31 @@ public class IPUserPortlet extends MVCPortlet  {
 				userLocation.longitude =Float.parseFloat( userArray[9]);			
 				System.out.println( " userArray :"+ userArray.length);						
 			}	
-			
-			
-			updateUserIP(userId, ip, userLocation );
-			//updateUserLocation(userId , location.countryCode  );		
-			
-			
+			i++;
+			actionResponse.setRenderParameter("userDetails", userDetails );
 			actionResponse.setRenderParameter("code-"+userId, userLocation.countryCode );
 			actionResponse.setRenderParameter("Location-"+userId, userLocation.countryName );
 			actionResponse.setRenderParameter("ip-"+userId, ip );
-			actionResponse.setRenderParameter("actionType-"+userId, "updateIP" );		
+			actionResponse.setRenderParameter("actionType-"+userId, "updateIP" );
 			
-			portletSession.setAttribute("ip-"+userId, ip, PortletSession.APPLICATION_SCOPE );
-			portletSession.setAttribute("code-"+userId, userLocation.countryCode, PortletSession.APPLICATION_SCOPE );
-			portletSession.setAttribute("Location-"+userId, userLocation.countryName , PortletSession.APPLICATION_SCOPE);
+			
+			
+			
+			
+			}while(userLocation.latitude==0&&i<3 );
+			if(userLocation.latitude!=0)
+			{
+				updateUserIP(userId, ip, userLocation );
+				
+				portletSession.setAttribute("ip-"+userId, ip, PortletSession.APPLICATION_SCOPE );
+				portletSession.setAttribute("code-"+userId, userLocation.countryCode, PortletSession.APPLICATION_SCOPE );
+				portletSession.setAttribute("Location-"+userId, userLocation.countryName , PortletSession.APPLICATION_SCOPE);
+			}
+			
+			//updateUserLocation(userId , location.countryCode  );		
+			
+			
+		
 			
 		}
 		/*else if( userId !="0" )

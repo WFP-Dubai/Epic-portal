@@ -1,0 +1,25 @@
+
+/* remember to define focus styles! */
+.wrappers :focus {
+	outline: 0;
+}
+
+.wrappers ol, .wrappers ul {
+	list-style: none;
+}
+/* tables still need 'cellspacing="0"' in the markup */
+.wrappers table {
+	border-collapse: separate;
+	border-spacing: 0;
+}
+.wrappers caption, .wrappers th, .wrappers td {
+	text-align: left;
+	font-weight: normal;
+}
+.wrappers blockquote:before, .wrappers blockquote:after,
+.wrappers q:before, .wrappers q:after {
+	content: "";
+}
+.wrappers blockquote, q {
+	quotes: "" "";
+}

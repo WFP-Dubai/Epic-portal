@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd">
+	<portlet>
+		<description>LiferayConfigModePortlet</description>
+		<portlet-name>LiferayConfigModePortlet</portlet-name>
+		<display-name>LiferayConfigModePortlet</display-name>
+		<portlet-class>com.skzine.liferay.portlet.ConfigModePortlet</portlet-class>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>VIEW</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>LiferayConfigModePortlet</title>
+			<short-title>LiferayConfigModePortlet</short-title>
+		</portlet-info>
+	</portlet>
+	<custom-portlet-mode>
+		<description>Config</description>
+		<portlet-mode>CONFIG</portlet-mode>
+		<portal-managed>false</portal-managed>
+	</custom-portlet-mode>
+</portlet-app>

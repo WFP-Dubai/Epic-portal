@@ -8,7 +8,7 @@
 <%@ page import="java.io.IOException"%>
 
 <%@ page import="com.liferay.geoipusersmap.model.GeoIPUsersMapDAO"%>
-<%@ page import="com.liferay.geoipusersmap.portlet.GeoIPUsersMapPortlet"%>
+<%@ page import="com.liferay.geoipusersmap.portlet.IPUserPortlet"%>
 <%@ page import="com.maxmind.geoip.CountryCodes"%>
 <%@ page import="com.liferay.geoipusersmap.model.MarkVO"%>
 <%@ page import="com.maxmind.geoip.Location"%>
@@ -29,8 +29,9 @@
 <%@ page import="java.util.Map"%>
 <portlet:defineObjects />
 
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
-<!-- Require EasyJQuery After JQuery --><script type="text/javascript" language="Javascript" src="http://api.easyjquery.com/easyjquery.js"></script>
+<script src="/rcs-slider-portlet/js/jquery-1.7.1.min.js" type="text/javascript"></script>
+<!-- Require EasyJQuery After JQuery -->
+<script type="text/javascript" language="Javascript" src="http://api.easyjquery.com/easyjquery.js"></script>
 <script type="text/javascript" language="Javascript">
     // 1. Your Data Here
     function my_callback(json) {
@@ -68,7 +69,7 @@ function <portlet:namespace />getip(json)
 	  			parameters["cmd"]= "updateIP";
 	  			<portlet:namespace />ajax.parameters = parameters;
 	  			<portlet:namespace />ajax.actionRequest("get" );
-	  			
+	  			alert( json.ip );
 	  			
 }
     
@@ -78,7 +79,7 @@ function <portlet:namespace />getip(json)
 </script>
 
 <%
-
+/*
  // System.out.println( " @@@ : Client IP :" + com.liferay.portal.util.PortalUtil.getHttpServletRequest(renderRequest).getRemoteAddr() );
 
 	User user = ((ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY)).getUser();
@@ -108,7 +109,8 @@ function <portlet:namespace />getip(json)
 		int num_marks= markList.size();
 		
 		MarkVO mark = (MarkVO) markList.get(0);
-		
+		if( mark!=null)
+		{
 		String htmlCode = mark.getHtmlCode();
 		Float longitude = mark.getLongitude();
 		Float latitude = mark.getLatitude();	
@@ -124,13 +126,13 @@ function <portlet:namespace />getip(json)
 
 		
 	
-	
+		}
 
 	
 	
 	}
 	
-	
+	*/
 
 %>
 

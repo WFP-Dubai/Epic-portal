@@ -1,29 +1,6 @@
 
-<%
-	/**
-	 * Copyright (c) 2000-2010 Liferay, Inc. All rights reserved.
-	 *
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:
-	 *
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 *
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-	 * SOFTWARE.
-	 */
-%>
-
 <%@ include file="/init.jsp"%>
+
 
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.ArrayList"%>
@@ -42,21 +19,29 @@
 
 <c:choose>
 	<c:when test="<%=Validator.isNotNull(license)%>">
-		<style>
-.ie6 .maps-content img {
-	behavior: expression(this.pngSet = true);
-}
-</style>
-		<script
-			src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<%=license%>"
-			type="text/javascript"></script>
 
-		<script src="http://gmap.nurtext.de/js/jquery.gmap-1.1.0-min.js"
-			type="text/javascript"></script>
+	<style type="text/css">
+		.ie6 .maps-content img {  behavior: expression(this.pngSet = true); }
+	</style>
+	<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=<%=license%>" type="text/javascript"></script>
+	<script src="http://gmap.nurtext.de/js/jquery.gmap-1.1.0-min.js" type="text/javascript"></script>
+	<script src="http://gmaps-utility-library-dev.googlecode.com/svn/tags/mapiconmaker/1.1/src/mapiconmaker.js" type="text/javascript"></script>
+			
+			
+			
+			
+	<link href="/geoip-usersmap-portlet/css/example.css" rel="stylesheet" type="text/css"/>
+  <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>-->
+  <script src="/geoip-usersmap-portlet/js/tabber.js"></script>
 
-		<script
-			src="http://gmaps-utility-library-dev.googlecode.com/svn/tags/mapiconmaker/1.1/src/mapiconmaker.js"
-			type="text/javascript"></script>
+	<script type="text/javascript">
+	jQuery(document).ready(function() 
+	{
+		//jQuery("#<portlet:namespace />tabs").tabs({ event: "click" });
+	});
+	</script>
+			
+			
 		<%
 					float mapZoomLat = 0;
 					float mapZoomLong = 0;
@@ -85,7 +70,13 @@
 					Integer num_users = GeoIPUsersMapDAO.getNumUsers();
 					int num_marks = markList.size();
 		%>
-		<table style="width: 100%;">
+
+<div class="tabber">
+
+     <div class="tabbertab">
+	  <h2> EPIC Users</h2>
+	  <p>
+	  <table style="width: 100%;">
 			<tr>
 				<td><h4
 						style="width: 100%; text-align: left; color: #4444FF; margin: 0; padding: 0;">&nbsp;EPIC Community</h4></td>
@@ -95,9 +86,26 @@
 					</h4></td>
 			</tr>
 		</table>
+		
+		<div id="<portlet:namespace />map" 	style="height: <%=height%>px; width: 100%;"></div>
+	  
+	  </p>
+     </div>
 
-		<div id="<portlet:namespace />map"
-			style="height: <%=height%>px; width: 100%;"></div>
+
+     <div class="tabbertab">
+	  <h2>Offices</h2>
+	  <p style="height:100%;">
+	  <div id="<portlet:namespace />officeMap" 	style="height: <%=height%>px; width: 100%;"></div>
+	  
+	  </p>
+     </div>
+
+
+     
+
+</div>
+
 
 		<script type="text/javascript">
 
@@ -108,12 +116,14 @@
 		var <portlet:namespace />isDefaultUser = "<%=isDefaultUser%>";
 		 if (GBrowserIsCompatible())
 		 {
-			var <portlet:namespace />map;
+		  
+		  	var <portlet:namespace />map = jQuery("#<portlet:namespace />map");			
 			var <portlet:namespace />longitude = "";
 			var <portlet:namespace />latitude = "";
 			var <portlet:namespace />myJSONtext="";
 			var <portlet:namespace />mapZoomLat ="";
-			var <portlet:namespace />mapZoomLong ="";		
+			var <portlet:namespace />mapZoomLong ="";
+			var <portlet:namespace />userCountry="United_Arab_Emirates";		
 			
 			//<portlet:namespace />map = new GMap(document.getElementById("<portlet:namespace />map"));  
 			/**********************************************************
@@ -123,7 +133,7 @@
 			<portlet:namespace />map.addControl(new GSmallMapControl());
 			////////////////////////////////////////////////////////////*/ 
 			        
-           <portlet:namespace />map = jQuery("#<portlet:namespace />map");		
+        
 	
 			// Create the marker and corresponding information window
 			function <portlet:namespace />createInfoMarker(point, address, isUserMarker) 
@@ -147,6 +157,9 @@
 
 <%
 String allUserIds = new Long(user.getUserId()).toString() ;
+String projectVisa="";
+String ccName = "";
+
 for (int i = 0; i < num_marks; i++) 
 				{
 						allUserIds+="DELIM";
@@ -158,7 +171,7 @@ for (int i = 0; i < num_marks; i++)
 						Float latitude = mark.getLatitude();
 						cntCode = mark.getLocation().countryCode;
 						CountryCodes cc = new CountryCodes();
-						String ccName = cc.getCountry(cntCode);
+						ccName = cc.getCountry(cntCode);
 
 						Integer is_auto = mark.getIs_Auto();
 						
@@ -171,16 +184,47 @@ for (int i = 0; i < num_marks; i++)
 								System.out.println(" User found : "+ user.getUserId() + " is_auto : "+ is_auto );
 								isUserFound = true;
 								isUserMarker = true;
+								if( ccName.indexOf(" ")!=-1)
+						    	{
+						    	String pArray[] = ccName.split(" ");
+						    	if( pArray!= null && pArray.length >0)
+						    	{
+						    		for( int k=0; k<pArray.length; k++)
+						    		{
+						    			if(k > 0) projectVisa= projectVisa+ "_";
+						    			String s = pArray[k];
+						    			if( s!=null)
+						    			{
+						    				if( s.equalsIgnoreCase("and"))
+						    				{
+						    					s = s.toLowerCase();
+						    				}
+						    				else s=  s.substring(0,1).toUpperCase()  + s.substring(1, s.length()).toLowerCase();    			
+						    				projectVisa = projectVisa + s ;
+						    			}
+						    		}
+						    	}
+						    	 
+						    	}
+						    	else
+						    	{
+						    		 projectVisa = ccName;
+						    		 projectVisa=  projectVisa.substring(0,1).toUpperCase()  + projectVisa.substring(1, projectVisa.length()).toLowerCase();
+						    		 System.out.println(" projectVisa : "+ projectVisa );
+						    	}
+								
 								if (is_auto == 1) 
 								{%>
 																	
 								<portlet:namespace />centerAddress = "latitude:\""+  "<%=latitude%>" +"\", longitude:\""+  "<%=longitude%>" + "\" , zoom:10";
 								//alert('if '+ <portlet:namespace />centerAddress );
-			
+								
+								<portlet:namespace />userCountry="<%=projectVisa%>";
 								<%} 
 								else 
 								{%>
 									<portlet:namespace />centerAddress = "address:\""+  "<%=ccName%>"+"\" , zoom:5" ;
+									<portlet:namespace />userCountry="<%=projectVisa%>";
 									//alert('else '+ <portlet:namespace />centerAddress );
 								<%}
 								
@@ -245,13 +289,19 @@ for (int i = 0; i < num_marks; i++)
         	<portlet:namespace />myJSONtext="";
         	<portlet:namespace />centerAddress= "address: \"Dubai, UAE\" , zoom:2" ;  
         }
-       // alert('final' + <portlet:namespace />centerAddress );
+     
         var <portlet:namespace />myObject = eval('( { markers: [' + <portlet:namespace />myJSONtext + ']  , '+<portlet:namespace />centerAddress+'  }  )');
         
-        
-       		 jQuery("#<portlet:namespace />map").gMap( <portlet:namespace />myObject  );
-        
-		
+        jQuery("#<portlet:namespace />map").gMap( <portlet:namespace />myObject  );
+       	
+       
+       		
+       	var <portlet:namespace />officeLocations = new GMap2(document.getElementById("<portlet:namespace />officeMap"));  	
+  		<portlet:namespace />officeLocations.setCenter(new GLatLng(24.4419, 55.0), 5);
+  		<portlet:namespace />officeLocations.setMapType(G_HYBRID_MAP );
+  		<portlet:namespace />officeLocations.setUIToDefault();
+  		
+  	
 		
 	
 		}
@@ -271,6 +321,7 @@ for (int i = 0; i < num_marks; i++)
       
        // <portlet:namespace />centerAddress = eval('('+ <portlet:namespace />centerAddress+')' );
        	/********************************************************************************************************************/
+       	
 		</script>
 
 
