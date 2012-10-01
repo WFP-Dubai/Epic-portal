@@ -105,8 +105,6 @@
 		}else if(countryName.equalsIgnoreCase("united kingdom")){
 		 guardian ="uk"; 
 		}
-<<<<<<< HEAD
-=======
  		
  		String countryCode3Digit = mark.getLocation().countryCode3Digit;
  		if( countryCode3Digit!=null)
@@ -117,7 +115,6 @@
  				countryCode3Digit="are";
  			} 					
  		}
->>>>>>> COMMIT Useful links Portlet
     	%>
     	
     	Useful links for <%=countryName.toUpperCase()%> : <br>
@@ -144,10 +141,7 @@
 		<ul>
 		<li>  <a href="https://www.cia.gov/library/publications/the-world-factbook/index.html" target="_blank"> (CIA) World Factbook</a></li>
 		<li> <a href="http://www.projectvisa.com/" target="_blank"> Project Visa</a> <br></li>
-<<<<<<< HEAD
-=======
 			<li> <a href="http://reliefweb.int/countries" target="_blank"> Relief Web </a> <br></li>
->>>>>>> COMMIT Useful links Portlet
 		<li> <a href="http://www.guardian.co.uk/world" target="_blank"> NEWS</a> <br></li>
 		<li> <a href="http://www.logcluster.org/countries" target="_blank"> Logistic Cluster</a> <br></li>
 		<li> <a href="http://ictemergency.wfp.org/web/ictepr/countries/" target="_blank"> Emergency Telecoms Cluster</a> <br></li>
