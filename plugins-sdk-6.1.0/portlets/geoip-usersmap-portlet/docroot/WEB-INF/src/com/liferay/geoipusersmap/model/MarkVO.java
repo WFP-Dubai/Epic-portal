@@ -148,12 +148,7 @@ public class MarkVO {
 				aux =".:DELIM:.";
 			}
 			String auxArray[] = aux.split(":DELIM:");
-<<<<<<< HEAD
 			ret+="<b>User:</b>&nbsp;&nbsp;"+auxArray[0]+"  <a href='mailto:" + auxArray[1]+"' > <img slt='email' src='/geoip-usersmap-portlet/images/icon_send_email.gif' ></img> </a> &nbsp; &nbsp; &nbsp; <a href='sip:" + auxArray[1]+"' > <img src='/geoip-usersmap-portlet/images/Lync-icon.png' alt='Lync icon' height='20' width='20' ></img> </a><br>";
-=======
-			//ret+="<b>User:</b>&nbsp;&nbsp;"+auxArray[0]+"  <a href='mailto:" + auxArray[1]+"' > <img title='click to send email' height='12' width='12' alt='email' src='/geoip-usersmap-portlet/images/icon_send_email.gif' ></img> </a> &nbsp; &nbsp; &nbsp; <a href='sip:" + auxArray[1]+"' > <img src='/geoip-usersmap-portlet/images/quote.gif' alt='Lync icon' title='click to start conversation' height='12' width='12' ></img> </a><br>";
-			ret+=" <a href='mailto:" + auxArray[1]+"' style='text-decoration:none;'><img title='click to send email' height='12' width='12' alt='email' src='/geoip-usersmap-portlet/images/icon_send_email.gif' ></img>  &nbsp; &nbsp;  "+auxArray[0]+"</a> &nbsp; <a href='sip:" + auxArray[1]+"' ><img src='/geoip-usersmap-portlet/images/quote.gif' alt='Lync icon' title='click to start conversation' height='12' width='12' ></img> </a>&nbsp;&nbsp;<br/>";
->>>>>>> origin/project_EPIC
 			/*if( this.isLive )
 			{
 				ret+="&nbsp;&nbsp;<img alt='status' src='/geoip-usersmap-portlet/images/online.gif'></img><br>";						

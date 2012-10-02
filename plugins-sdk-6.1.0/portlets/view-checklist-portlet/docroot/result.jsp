@@ -166,11 +166,7 @@ description = description.replaceAll("<p></p>","");
 		if( isGlobal.equals("0")||isOwner=="1")
 		{%>
 		<tr>
-<<<<<<< HEAD
 			<td><input title="click to edit checklist" id="<portlet:namespace/>edit" type="button" value="EDIT" onclick="<portlet:namespace/>editList()" />
-=======
-			<td ><input style="display:none;" title="click to edit checklist" id="<portlet:namespace/>edit" type="button" value="EDIT" onclick="<portlet:namespace/>editList()" />
->>>>>>> origin/project_EPIC
 			
 			<input title="click to delete checklist"id="<portlet:namespace/>delete" type="button" value="DELETE" onclick="<portlet:namespace/>deleteList(<%=chklist_id%>)" style="margin-left:30px;" /></td>
 		</tr>
