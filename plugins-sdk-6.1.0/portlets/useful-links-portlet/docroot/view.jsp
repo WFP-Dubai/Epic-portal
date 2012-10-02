@@ -105,11 +105,25 @@
 		}else if(countryName.equalsIgnoreCase("united kingdom")){
 		 guardian ="uk"; 
 		}
+<<<<<<< HEAD
+=======
+ 		
+ 		String countryCode3Digit = mark.getLocation().countryCode3Digit;
+ 		if( countryCode3Digit!=null)
+ 		{
+ 			countryCode3Digit= countryCode3Digit.toLowerCase();
+ 			if(countryCode3Digit.equals("uae") )
+ 			{
+ 				countryCode3Digit="are";
+ 			} 					
+ 		}
+>>>>>>> origin/project_EPIC
     	%>
     	
     	Useful links for <%=countryName.toUpperCase()%> : <br>
     	<ul>
     	<li> <a href="http://en.wikipedia.org/wiki/<%=projectVisa %>" target="_blank"> Wikipedia </a> <br></li>
+    	<li> <a href="http://reliefweb.int/country/<%=countryCode3Digit%>" target="_blank"> Relief Web </a> <br></li>
     	<li>  <a href="https://www.cia.gov/library/publications/the-world-factbook/geos/<%=countryCode.toLowerCase() %>.html" target="_blank"> (CIA) World Factbook</a></li>
     	<li> <a href="http://www.projectvisa.com/visainformation/<%=projectVisa %>" target="_blank"> Project Visa</a> <br></li>
     	<li> <a href="http://www.guardian.co.uk/<%=guardian%>" target="_blank"> NEWS</a> <br></li>
@@ -130,6 +144,10 @@
 		<ul>
 		<li>  <a href="https://www.cia.gov/library/publications/the-world-factbook/index.html" target="_blank"> (CIA) World Factbook</a></li>
 		<li> <a href="http://www.projectvisa.com/" target="_blank"> Project Visa</a> <br></li>
+<<<<<<< HEAD
+=======
+			<li> <a href="http://reliefweb.int/countries" target="_blank"> Relief Web </a> <br></li>
+>>>>>>> origin/project_EPIC
 		<li> <a href="http://www.guardian.co.uk/world" target="_blank"> NEWS</a> <br></li>
 		<li> <a href="http://www.logcluster.org/countries" target="_blank"> Logistic Cluster</a> <br></li>
 		<li> <a href="http://ictemergency.wfp.org/web/ictepr/countries/" target="_blank"> Emergency Telecoms Cluster</a> <br></li>
