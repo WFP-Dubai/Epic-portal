@@ -71,7 +71,7 @@ public class MyAddressListener extends BaseModelListener<Address>
 	 {
 		 	System.out.println(" #####   MyAddressListener.onBeforeUpdate : address"+ address );
 		 	
-		 	//LDAPUtil.importAddresses(address);
+		 	if( address.isNew() ) LDAPUtil.importAddresses(address);
 		 	
 		 	/*address.setZip("503060");
 		 	address.setStreet1("Dubai Pearl Building");

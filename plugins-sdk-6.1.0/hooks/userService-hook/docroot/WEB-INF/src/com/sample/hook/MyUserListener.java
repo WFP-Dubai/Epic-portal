@@ -108,7 +108,7 @@ public class MyUserListener extends BaseModelListener<User>
 				{
 					if( phoneList== null || phoneList.size()==0  )
 					{
-						//LDAPUtil.importPhones( user);
+						LDAPUtil.importPhones( user);
 					}
 					if(addressList== null || addressList.size()==0  )
 					{
@@ -146,10 +146,10 @@ public class MyUserListener extends BaseModelListener<User>
 				{
 					//LDAPUtil.importAddresses( user );
 				}
-				if( user.isPasswordModified() )
+				if( user.isPasswordModified() && user.getPasswordUnencrypted()!=null )
 				{
 					//String pwd = user.getPasswordUnencrypted();						
-					//LDAPUtil.updatePassword( pwd );
+					// LDAPUtil.updatePassword( pwd );
 					String pwd = user.getPassword();
 					if( pwd!=null && pwd.length()> 0 ){
 					//LDAPUtil.updatePassword( user );
@@ -159,7 +159,7 @@ public class MyUserListener extends BaseModelListener<User>
 				//user.setPasswordUnencrypted( LiferayUsersMapDAO.getPlainPassword( user.getUserId()) );
 				System.out.println(" END Password Modified :comments :"+ user.getComments()+":  unecrypted :" +user.getPasswordUnencrypted() );
 				
-				//LDAPUtil.updateUser(user);
+				LDAPUtil.updateUser(user);
 				
 			}
 			catch(Exception e){ e.printStackTrace(); }			

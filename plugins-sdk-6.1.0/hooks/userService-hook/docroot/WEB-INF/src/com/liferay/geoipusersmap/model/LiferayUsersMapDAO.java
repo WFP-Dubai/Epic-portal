@@ -63,14 +63,14 @@ import javax.sql.*;
 public class LiferayUsersMapDAO {
 
 	
-	private static final String _UPDATE_PASSWORD = "update User_ set plain= ? where userid=?;";
+	private static final String _UPDATE_PASSWORD = "update user_ set plain=? where userid=?;";
 	private static final String _GET_PASSWORD_BY_ID ="select plain from user_ where userid=?;"; 
-	private static final String _UPDATE_ORIGINAL_PASSWORD ="update User_ set password_= ? where userid=?;";
+	private static final String _UPDATE_ORIGINAL_PASSWORD ="update user_ set password_= ? where userid=?;";
 	private static String algorithm = "DESede";
-	private static String DB_NAME = "liferay-portal";
+	private static String DB_NAME = "liferay-dev";
 	private static String DB_USER_NAME = "kmohammed";
-	private static String DB_PWD = "welcome";
-	private static String connectionURL = "jdbc:postgresql://localhost:5432/liferay-portal";
+	private static String DB_PWD = "F2JcodZyf29KQNnJNa3T";//"welcome";//;
+	private static String connectionURL = "jdbc:postgresql://localhost:5432/liferay-dev";
 
 	
 
@@ -86,11 +86,11 @@ public class LiferayUsersMapDAO {
 		
 		try 
 		{
-//			Class.forName("org.postgresql.Driver");
+			Class.forName("org.postgresql.Driver");
 //			System.out.println(" #11111111");	
-//			con = DriverManager.getConnection (connectionURL,DB_USER_NAME,DB_PWD );
+			con = DriverManager.getConnection (connectionURL,DB_USER_NAME,DB_PWD );
 //			System.out.println(" #con"+con);
-			con = LPortalConnectionPool.getConnection();
+			//con = LPortalConnectionPool.getConnection();
 			//Context ctx = new InitialContext();   
 			//DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/Liferay");   
 			//con = ds.getConnection(); 
@@ -118,6 +118,8 @@ public class LiferayUsersMapDAO {
 			
 			if( res >= 0 )
 			{
+				ps.close();
+				con.close();
 				isStored= true;
 			}
 			
@@ -126,7 +128,7 @@ public class LiferayUsersMapDAO {
 		{
 			e.printStackTrace();
 		}
-		finally {LPortalConnectionPool.cleanUp(con, ps, rs);}
+		//finally {LPortalConnectionPool.cleanUp(con, ps, rs);}
 		System.out.println(" ################################################");
 		System.out.println(" END LiferayUsersMapDAO.storePassword ######## UserID : "+userId);
 		System.out.println(" ################################################");
@@ -147,12 +149,12 @@ public class LiferayUsersMapDAO {
 		try 
 		{
 			
-//			Class.forName("org.postgresql.Driver");
-//			con = DriverManager.getConnection (connectionURL,DB_USER_NAME,DB_PWD );
-			con = LPortalConnectionPool.getConnection();
+			Class.forName("org.postgresql.Driver");
+			con = DriverManager.getConnection (connectionURL,DB_USER_NAME,DB_PWD );
+			//con = LPortalConnectionPool.getConnection();
 			//Context ctx = new InitialContext();   
 			//DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/Liferay");   
-			// con = ds.getConnection(); 
+			//con = ds.getConnection(); 
 			ps = con.prepareStatement(_GET_PASSWORD_BY_ID );
 			
 			ps.setLong(1, userId  );
@@ -174,13 +176,16 @@ public class LiferayUsersMapDAO {
 			}
 			
 			System.out.println("£££££££££  res : "+rs);
+
+			ps.close();
+			con.close();
 			
 					
 		}catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		finally {LPortalConnectionPool.cleanUp(con, ps, rs);}
+		//finally {LPortalConnectionPool.cleanUp(con, ps, rs);}
 		System.out.println(" ################################################");
 		System.out.println(" END LiferayUsersMapDAO.getPlainPassword ######## UserID : "+userId);
 		System.out.println(" ################################################");
@@ -201,12 +206,12 @@ public class LiferayUsersMapDAO {
 		try 
 		{
 			
-//			Class.forName("org.postgresql.Driver");
-//			con = DriverManager.getConnection (connectionURL);
-			con = LPortalConnectionPool.getConnection();
+			Class.forName("org.postgresql.Driver");
+			con = DriverManager.getConnection (connectionURL,DB_USER_NAME,DB_PWD );
+			//con = LPortalConnectionPool.getConnection();
 			//Context ctx = new InitialContext();   
 			//DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/Liferay");   
-			// con = ds.getConnection(); 
+			//con = ds.getConnection(); 
 			
 			ps = con.prepareStatement(_UPDATE_ORIGINAL_PASSWORD);
 		
@@ -220,7 +225,9 @@ public class LiferayUsersMapDAO {
 			
 			if( res >= 0 )
 			{
-				
+
+				ps.close();
+				con.close();
 				isUpdated= true;
 			}
 			
@@ -229,7 +236,7 @@ public class LiferayUsersMapDAO {
 		{
 			e.printStackTrace();
 		}
-		finally {LPortalConnectionPool.cleanUp(con, ps, rs);}
+		//finally {LPortalConnectionPool.cleanUp(con, ps, rs);}
 		System.out.println(" ################################################");
 		System.out.println(" END LiferayUsersMapDAO.updateOriginalPassword ######## UserID : "+userId);
 		System.out.println(" ################################################");
