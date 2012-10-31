@@ -171,7 +171,7 @@ public class LDAPUtil
 		DirContext ctx = getLDAPContext( user );			
 		
 		//Attributes attrs = sr.getAttributes();			
-		Attributes attrs = getAllAttributes ( ctx );
+		Attributes attrs = getAllAttributes ( ctx, user );
 		
 		populateLDAPUser(ldapUserInfo, attrs ) ;
 		
@@ -179,17 +179,17 @@ public class LDAPUtil
 		return ldapUserInfo;
 	}
 	
-	public static Attributes getAllAttributes(DirContext ctx)
+	public static Attributes getAllAttributes(DirContext ctx, User user)
 	{
 		System.out.println(" ############## START  LDAPUtil.getAllAttributes ##################### screenName :"+screenName);
 		// Specify the search filter
 		Attributes attrs = null;
 		try
 		{
-		String FILTER = "(&(objectClass=top) ((uid=" + screenName + ")))";
+		String FILTER = "(&(objectClass=top) ((uid=" + user.getScreenName() + ")))";
 
 		// limit returned attributes to those we care about
-		String[] attrIDs = { "sn", "cn", "mobile", "postalCode","personalTitle","localityName",
+		String[] attrIDs = { "sn", "cn", "mobile", "postalCode","personalTitle","l",
 				"telephoneNumber", "street", "communicationUri", "o", "c" ,"uid"};
 
 		SearchControls ctls = new SearchControls();
@@ -228,7 +228,7 @@ public class LDAPUtil
 			Object streetObj = attrs.get("street");
 			Object countryObj = attrs.get("c");
 			Object personalTitleObj = attrs.get("personalTitle");
-			Object localityNameObj = attrs.get("localityName");
+			Object localityNameObj = attrs.get("l");
 			
 			if( mobileObj!=null) ldapUserInfo.mobile = mobileObj.toString();
 			if( postalCodeObj!=null) ldapUserInfo.postalCode = postalCodeObj.toString().replace("postalCode:","");
@@ -296,8 +296,10 @@ public class LDAPUtil
 		System.out.println(" ############## START  LDAPUtil.beforeUpdateContact ##################### contact: "+contact );		
 		try 
 		{		
-			 DirContext ctx = getLDAPContextByContact(contact);		
-			 Attributes attrs = getAllAttributes( ctx );			 
+				
+			 User user=UserLocalServiceUtil.getUserByContactId( contact.getContactId());
+			 DirContext ctx = getLDAPContext(user);	
+			 Attributes attrs = getAllAttributes( ctx, user );			 
 			 List<String> commuriList = getAttributeValueListByName( attrs ,"communicationUri");		
 			 if( commuriList!=null)
 			 {
@@ -338,13 +340,27 @@ public class LDAPUtil
 			 System.out.println(" 4444444444");
 			// System.out.println(" ############## 44444444 password :"+ user.getPassword() );
 			 
+			 /*UserLocalServiceUtil.updatePassword(user.getUserId(),
+					 							user.getPassword(),
+					 							user.getPassword(),
+					 							false,
+					 							true);*/
+			 UserLocalServiceUtil.updatePasswordManually(user.getUserId(),
+					 									user.getPassword(),
+					 									true,
+					 									false,
+					 									new java.util.Date() );
+			 
 			
 			 System.out.println(" 1  isPwdModified");
 			boolean isPwdModified = LiferayUsersMapDAO.storePassword( user.getUserId(),user.getPasswordUnencrypted() );
-				
-				
-				 System.out.println(" 22222222  ");
-				 LiferayUsersMapDAO.updateOriginalPassword( user.getUserId(),user.getPassword() );
+			 System.out.println(" 22222222  ");
+			// LiferayUsersMapDAO.updateOriginalPassword( user.getUserId(),user.getPassword() );
+			 user.setPasswordUnencrypted(null);
+			 System.out.println(" eeerere  ");
+			 user.setPasswordModified(false);
+			 System.out.println(" 222bbvbvbv22222  ");
+			 
 				 
 				
 				// System.out.println(" 3 isPwdModified"+isPwdModified);
@@ -361,7 +377,9 @@ public class LDAPUtil
 		try 
 		{	
 			
-			 DirContext ctx = getLDAPContextByContact(contact);	
+			 //DirContext ctx = getLDAPContextByContact(contact);	
+			 User user=UserLocalServiceUtil.getUserByContactId( contact.getContactId());
+			 DirContext ctx = getLDAPContext(user);	
 			
 			 ModificationItem[]  mods= new ModificationItem[1];			
 			 //getIcqSn -> gtalk, sip/lync ->aim 
@@ -402,7 +420,7 @@ public class LDAPUtil
 		try 
 		{
 			DirContext ctx = getLDAPContext( user );			 
-			Attributes attrs = getAllAttributes( ctx );			
+			Attributes attrs = getAllAttributes( ctx, user );			
 			phoneList = getAttributeValueListByName( attrs ,"telephoneNumber");
 		}
 		catch(Exception e) { e.printStackTrace(); }			 
@@ -567,15 +585,17 @@ public class LDAPUtil
 	}
 	public static void exportAddress(Address address )
 	{		
-		System.out.println(" ############## START  LDAPUtil.exportPhones ##################### address: "+address );		
+		System.out.println(" ############## START  LDAPUtil.exportAddress ##################### address: "+address );		
 		try 
 		{
 			/* get a handle to an Initial DirContext */
-			DirContext ctx = getLDAPContextByAddress(address);			
+			User user = UserLocalServiceUtil.getUserById( address.getUserId() );
+			 System.out.println( " user "+user );
+			DirContext ctx = getLDAPContext(user);			
 			ModificationItem[] mods = new ModificationItem[ 4];		 
 			 Attribute mod0 = new BasicAttribute("postalCode");
 			 Attribute mod1 = new BasicAttribute("street");
-			 Attribute mod2 = new BasicAttribute("localityName");
+			 Attribute mod2 = new BasicAttribute("l");
 			 Attribute mod3 = new BasicAttribute("c");
 		
 			 mod0.add( address.getZip() );
@@ -589,10 +609,14 @@ public class LDAPUtil
 			 mods[3] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod3);
 			 
 			 ctx.modifyAttributes("ldap://ldap-dev.globalepic.lu:389/uid="+screenName +",ou=users,ou=people,dc=emergency,dc=lu", mods);
+			 System.out.println(" ############## SUCCESS  LDAPUtil.exportAddress ##################### address: "+address );		
+				
 			 
 			 
 		}
 		catch(Exception e){e.printStackTrace(); }
+		System.out.println(" ############## END  LDAPUtil.exportAddress ##################### address: "+address );		
+		
 	}
 	public static void exportPhones(User user )
 	{		
