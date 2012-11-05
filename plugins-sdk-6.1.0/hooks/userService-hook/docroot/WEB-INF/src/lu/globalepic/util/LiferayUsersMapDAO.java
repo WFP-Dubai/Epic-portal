@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.liferay.geoipusersmap.model;
+package lu.globalepic.util;
 
 import javax.portlet.RenderRequest;
 

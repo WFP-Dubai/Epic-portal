@@ -33,7 +33,6 @@ import com.liferay.portal.model.Phone;
 import com.liferay.portal.ModelListenerException;
 import com.liferay.portal.service.AddressLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.geoipusersmap.model.LiferayUsersMapDAO;
 /*
 
  * Retrieve several attributes of a particular entry.
