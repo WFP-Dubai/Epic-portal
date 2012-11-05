@@ -13,41 +13,12 @@
  */
 
 package lu.globalepic.hook;
-import com.sample.util.*;
-import com.liferay.portal.ModelListenerException;
-
-import com.liferay.portal.model.User;
-import com.liferay.portal.model.Contact;
-import com.liferay.portal.model.Phone;
-import com.liferay.portal.model.Address;
-import com.liferay.portal.model.AddressWrapper;
-import com.liferay.portal.model.BaseModelListener;
-
-import com.liferay.portal.kernel.language.LanguageUtil;
-
-import com.liferay.portal.kernel.util.GetterUtil;
-
-
-
-import com.liferay.portal.service.MembershipRequestLocalServiceUtil;
-
-import com.liferay.portal.service.ServiceContext;
-
-import com.liferay.portal.service.ServiceContextThreadLocal;
-
-import com.liferay.portal.service.UserLocalServiceUtil;
-
-import java.io.Serializable;
-
-import java.util.List;
-
-import java.util.Map;
-
 import lu.globalepic.util.LDAPUserInfo;
 import lu.globalepic.util.LDAPUtil;
 
-import org.omg.CORBA.SystemException;
-
+import com.liferay.portal.ModelListenerException;
+import com.liferay.portal.model.BaseModelListener;
+import com.liferay.portal.model.Contact;
 import com.liferay.portal.service.ListTypeServiceUtil;
 /**
  * @author Michael C. Han

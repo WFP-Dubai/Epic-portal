@@ -14,46 +14,16 @@
 
 package lu.globalepic.hook;
 
-import com.liferay.portal.ModelListenerException;
-import com.sample.util.*;
-
-import com.liferay.portal.model.User;
-import com.liferay.portal.model.Contact;
-import com.liferay.portal.model.Phone;
-import com.liferay.portal.model.Address;
-import com.liferay.portal.model.AddressWrapper;
-import com.liferay.portal.model.BaseModelListener;
-
-import com.liferay.portal.kernel.language.LanguageUtil;
-
-import com.liferay.portal.kernel.util.GetterUtil;
-
-
-import com.liferay.geoipusersmap.model.LiferayUsersMapDAO;
-
-import com.liferay.portal.service.MembershipRequestLocalServiceUtil;
-
-import com.liferay.portal.service.ServiceContext;
-
-import com.liferay.portal.service.ServiceContextThreadLocal;
-
-import com.liferay.portal.service.UserLocalServiceUtil;
-
-
-import com.liferay.portal.service.ContactLocalServiceUtil;
-
-import java.io.Serializable;
-
 import java.util.List;
 
-import java.util.Map;
-
 import lu.globalepic.util.LDAPUtil;
+import lu.globalepic.util.LiferayUsersMapDAO;
 
-import com.liferay.portal.service.PhoneLocalServiceUtil;
-import com.liferay.portal.service.ListTypeServiceUtil;
-import com.liferay.portal.model.ListTypeConstants;
-import com.liferay.portal.model.ListType;
+import com.liferay.portal.ModelListenerException;
+import com.liferay.portal.model.Address;
+import com.liferay.portal.model.BaseModelListener;
+import com.liferay.portal.model.Phone;
+import com.liferay.portal.model.User;
 /**
  * @author Michael C. Han
  * @author Brian Wing Shun Chan
