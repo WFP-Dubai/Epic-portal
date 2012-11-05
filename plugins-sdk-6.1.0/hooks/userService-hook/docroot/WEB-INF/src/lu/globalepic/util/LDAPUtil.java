@@ -417,11 +417,11 @@ public class LDAPUtil
 			 System.out.println(" 2");
 			 mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod0);
 			 System.out.println(" 3"+user.getScreenName() );
-			// System.out.println(" ############## 44444444 password :"+ user.getPassword() );
+//			 System.out.println(" ############## 44444444 password :"+ user.getPassword() );
 			 ctx.modifyAttributes("ldap://ldap-dev.globalepic.lu:389/uid="+user.getScreenName() +",ou=users,ou=people,dc=emergency,dc=lu", mods);
-			// LiferayUsersMapDAO.storePassword( user.getUserId(), user.getPasswordUnencrypted());
+//			 LiferayUsersMapDAO.storePassword( user.getUserId(), user.getPasswordUnencrypted());
 			 System.out.println(" 4444444444");
-			// System.out.println(" ############## 44444444 password :"+ user.getPassword() );
+//			 System.out.println(" ############## 44444444 password :"+ user.getPassword() );
 			 
 			 /*UserLocalServiceUtil.updatePassword(user.getUserId(),
 					 							user.getPassword(),
@@ -432,14 +432,14 @@ public class LDAPUtil
 			 
 			
 			 System.out.println(" 1  isPwdModified");
-			boolean isPwdModified = LiferayUsersMapDAO.storePassword( user.getUserId(),user.getPasswordUnencrypted() );
+			 boolean isPwdModified = LiferayUsersMapDAO.storePassword( user.getUserId(),user.getPasswordUnencrypted() );
 			 System.out.println(" 22222222  ");
-			// LiferayUsersMapDAO.updateOriginalPassword( user.getUserId(),user.getPassword() );
+//			 LiferayUsersMapDAO.updateOriginalPassword( user.getUserId(),user.getPassword() );
 			 user.setPasswordUnencrypted(null);
 			 System.out.println(" eeerere  ");
 			 user.setPasswordModified(false);
 			 System.out.println(" 222bbvbvbv22222  ");
-			// FIXME: not working local save???? 
+//			 FIXME: not working local save???? 
 			 UserLocalServiceUtil.updatePasswordManually(user.getUserId(),
 						user.getPassword(),
 						true,
