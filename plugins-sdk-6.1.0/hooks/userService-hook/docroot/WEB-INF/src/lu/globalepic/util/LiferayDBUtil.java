@@ -15,7 +15,7 @@ package lu.globalepic.util;
  */
 public class LiferayDBUtil
 {
-	public static final String STORE_PASSWORD ="insert into user_ (plain) values( ? ) where userid=?";
+	//public static final String STORE_PASSWORD ="insert into user_ (plain) values( ? ) where userid=?";
 	
 	
 }
