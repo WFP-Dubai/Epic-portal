@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.sample.util;
+package lu.globalepic.util;
 
 /**
  * @author kaleem.mohammed
@@ -17,7 +17,9 @@ import java.util.List;
 import java.util.ArrayList;
 import javax.naming.*;
 import javax.naming.directory.*;
-import com.sample.util.LDAPUserInfo;
+
+import lu.globalepic.util.LDAPUserInfo;
+
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.model.Contact;
 import com.liferay.portal.service.PhoneLocalServiceUtil;

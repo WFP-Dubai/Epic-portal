@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.sample.hook;
+package lu.globalepic.hook;
 import com.sample.util.*;
 import com.liferay.portal.ModelListenerException;
 
@@ -42,6 +42,9 @@ import java.io.Serializable;
 import java.util.List;
 
 import java.util.Map;
+
+import lu.globalepic.util.LDAPUserInfo;
+import lu.globalepic.util.LDAPUtil;
 
 import org.omg.CORBA.SystemException;
 

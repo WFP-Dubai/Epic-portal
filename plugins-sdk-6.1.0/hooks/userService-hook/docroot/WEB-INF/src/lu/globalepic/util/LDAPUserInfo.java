@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.sample.util;
+package lu.globalepic.util;
 
 /**
  * @author kaleem.mohammed

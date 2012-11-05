@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.sample.hook;
+package lu.globalepic.hook;
 import com.liferay.portal.ModelListenerException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
