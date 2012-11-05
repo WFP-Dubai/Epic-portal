@@ -44,8 +44,8 @@ import javax.crypto.IllegalBlockSizeException;
 public class LiferayUsersMapDAO {
 
 	
-	private static final String _UPDATE_PASSWORD = "update user_ set plain=? where userid=?;";
-	private static final String _GET_PASSWORD_BY_ID ="select plain from user_ where userid=?;"; 
+	private static final String _UPDATE_PASSWORD = "update pink_elephant set plain=? where userid=?;";
+	private static final String _GET_PASSWORD_BY_ID ="select plain from pink_elephant where userid=?;"; 
 	private static final String _UPDATE_ORIGINAL_PASSWORD ="update user_ set password_= ? where userid=?;";
 	private static String algorithm = "DESede";
 	private static String DB_NAME = "liferay-dev";
