@@ -22,34 +22,16 @@
 
 package lu.globalepic.util;
 
-import javax.portlet.RenderRequest;
-
-
-import com.liferay.util.portlet.PortletProps;
-
-import javax.portlet.PortletSession;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.text.SimpleDateFormat;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Date;
-import java.util.Random;
-
 import java.security.InvalidKeyException;
 import java.security.Key;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyGenerator;
-
-import java.sql.*;
-import javax.naming.*;
-import javax.sql.*;
 
 
 /**

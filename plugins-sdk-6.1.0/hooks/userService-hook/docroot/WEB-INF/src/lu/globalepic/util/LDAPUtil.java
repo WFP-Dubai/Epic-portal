@@ -7,32 +7,33 @@ package lu.globalepic.util;
  * @author kaleem.mohammed
  *
  */
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Hashtable;
-
-import java.util.Enumeration;
 import java.util.List;
 
-import java.util.ArrayList;
-import javax.naming.*;
-import javax.naming.directory.*;
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.ModificationItem;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
 
-import lu.globalepic.util.LDAPUserInfo;
-
-import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.model.Contact;
-import com.liferay.portal.service.PhoneLocalServiceUtil;
-import com.liferay.portal.service.ListTypeServiceUtil;
-import com.liferay.portal.model.ListTypeConstants;
-import com.liferay.portal.model.ListType;
-import com.liferay.portal.model.User;
-import com.liferay.portal.model.Contact;
 import com.liferay.portal.model.Address;
+import com.liferay.portal.model.Contact;
+import com.liferay.portal.model.ListType;
+import com.liferay.portal.model.ListTypeConstants;
 import com.liferay.portal.model.Phone;
-import com.liferay.portal.ModelListenerException;
-import com.liferay.portal.service.AddressLocalServiceUtil;
-import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.ListTypeServiceUtil;
+import com.liferay.portal.service.PhoneLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 /*
 
  * Retrieve several attributes of a particular entry.
