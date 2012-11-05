@@ -439,7 +439,7 @@ public class LDAPUtil
 			 System.out.println(" eeerere  ");
 			 user.setPasswordModified(false);
 			 System.out.println(" 222bbvbvbv22222  ");
-			 
+			// FIXME: not working local save???? 
 			 UserLocalServiceUtil.updatePasswordManually(user.getUserId(),
 						user.getPassword(),
 						true,
