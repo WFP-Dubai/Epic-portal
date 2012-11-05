@@ -777,7 +777,6 @@ public class LDAPUtil
 			  while ((strLine = br.readLine()) != null)  
 			  {
 					  // Print the content on the console
-					 // System.out.println (" ££££££££££"+ strLine);
 					  String strArray [] = strLine.split(";");
 					  String ccode = strArray[2];	 
 					  if( ccode!=null&& ccode.equalsIgnoreCase( code ) ) 
@@ -812,7 +811,6 @@ public class LDAPUtil
 			  while ((strLine = br.readLine()) != null)  
 			  {
 					  // Print the content on the console
-					 // System.out.println (" ££££££££££"+ strLine);
 					  String strArray [] = strLine.split(";");
 					  String ccode = strArray[2];
 					  String countryId = strArray[0];		

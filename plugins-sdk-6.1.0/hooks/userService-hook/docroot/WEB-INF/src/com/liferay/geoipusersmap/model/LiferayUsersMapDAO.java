@@ -22,7 +22,6 @@
 
 package com.liferay.geoipusersmap.model;
 
-import com.liferay.geoipusersmap.util.LPortalConnectionPool;
 import javax.portlet.RenderRequest;
 
 
@@ -114,7 +113,7 @@ public class LiferayUsersMapDAO {
 
 			System.out.println(" mmmmm");
 			
-			System.out.println("£££££££££  res : "+res);
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  res : "+res);
 			
 			if( res >= 0 )
 			{
@@ -168,14 +167,14 @@ public class LiferayUsersMapDAO {
 			//	Key  key = KeyGenerator.getInstance(algorithm).generateKey();
 				//Cipher  cipher = Cipher.getInstance(algorithm);
 			//	String pwd = decrypt(encryptionBytesFromDB.getBytes(), key, cipher);
-				//System.out.println("£££££££££  res  pwd : "+pwd );
+				//System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  res  pwd : "+pwd );
 				//ps.close();
 				//con.close();
 				
 						
 			}
 			
-			System.out.println("£££££££££  res : "+rs);
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  res : "+rs);
 
 			ps.close();
 			con.close();
@@ -221,7 +220,7 @@ public class LiferayUsersMapDAO {
 			ps.setLong(2, userId  );
 			int res =ps.executeUpdate();
 			
-			System.out.println("£££££££££  res : "+res);
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  res : "+res);
 			
 			if( res >= 0 )
 			{

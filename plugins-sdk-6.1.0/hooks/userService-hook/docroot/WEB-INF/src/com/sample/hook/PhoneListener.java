@@ -25,7 +25,7 @@ import com.liferay.portal.service.PhoneLocalServiceUtil;
  * Listens for Phone model changes and removes the number only if its value
  * equals "0".
  *
- *@authorTomasz Wojewódka
+ *@authorTomasz WojewÃ³dka
  */
 public class PhoneListener extends BaseModelListener<Phone> {
     public void onAfterCreate(Phone phone) throws ModelListenerException {
