@@ -89,7 +89,7 @@ public class MyAddressListener extends BaseModelListener<Address>
 		 
 		 	LDAPUtil.exportAddress( address);
 		 	
-		 	super.onAfterUpdate(address);
+		 	//super.onAfterUpdate(address);
 		 	
 		 	System.out.println(" #####   END MyAddressListener.onAfterUpdate : address"+ address );
 			

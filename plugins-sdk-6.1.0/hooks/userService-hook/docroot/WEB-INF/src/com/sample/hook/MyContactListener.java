@@ -43,6 +43,9 @@ import java.util.List;
 
 import java.util.Map;
 
+import org.omg.CORBA.SystemException;
+
+import com.liferay.portal.service.ListTypeServiceUtil;
 /**
  * @author Michael C. Han
  * @author Brian Wing Shun Chan
@@ -107,18 +110,26 @@ public class MyContactListener extends BaseModelListener<Contact>
 		{
 			
 				System.out.println(" #####  KALEEM START MyContactListener.onBeforeUpdate : Contact"+ contact );
-				LDAPUtil.beforeUpdateContact(contact );
+				if(  contact.getAimSn()=="" || contact.getAimSn()==null )LDAPUtil.beforeUpdateContact(contact );
 				//LDAPUtil.updateContact(contact,true );
-				
+				super.onBeforeUpdate(contact);
 				System.out.println(" #####   END MyContactListener.onBeforeUpdate : Contact"+ contact );
 		}
 	 public void   onAfterUpdate(Contact contact) throws ModelListenerException 
 	{
 		
-			System.out.println(" #####   START MyContactListener.onAfterUpdate : Contact"+ contact );
-			LDAPUtil.updateContact(contact,false );
+			System.out.println(" #####   START MyContactListener.onAfterUpdate : contact.getPrefixId("+ contact.getPrefixId() );
+			try{
+				int prefix = contact.getPrefixId();
+				if( prefix>0 ){
+			String prefixName =ListTypeServiceUtil.getListType(contact.getPrefixId()).getName();
 			
-			System.out.println(" #####   END MyContactListener.onAfterUpdate : Contact"+ contact );
+			System.out.println(" ##### prefix"+ prefix+ "prefixName "+ prefixName );
+				}
+				LDAPUtil.updateContact(contact,false );
+			}catch(Exception e){ e.printStackTrace(); }
+			
+			System.out.println(" #####   END MyContactListener.onAfterUpdate : ");
 	}
 
 	

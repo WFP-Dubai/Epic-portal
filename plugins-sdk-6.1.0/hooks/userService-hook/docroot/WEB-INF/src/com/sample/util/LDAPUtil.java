@@ -173,7 +173,7 @@ public class LDAPUtil
 		//Attributes attrs = sr.getAttributes();			
 		Attributes attrs = getAllAttributes ( ctx, user );
 		
-		populateLDAPUser(ldapUserInfo, attrs ) ;
+		populateLDAPUser(ldapUserInfo, attrs, user ) ;
 		
 		System.out.println(" ############## END  LDAPUtil.getLDAPUser #####################");
 		return ldapUserInfo;
@@ -213,7 +213,7 @@ public class LDAPUtil
 		
 		return attrs;
 	}
-	public static void populateLDAPUser(LDAPUserInfo ldapUserInfo, Attributes attrs ) 
+	public static void populateLDAPUser(LDAPUserInfo ldapUserInfo, Attributes attrs, User user ) 
 	{	
 		System.out.println(" ############## START  LDAPUtil.populateLDAPUser #####################");		
 		try
@@ -234,9 +234,13 @@ public class LDAPUtil
 			if( postalCodeObj!=null) ldapUserInfo.postalCode = postalCodeObj.toString().replace("postalCode:","");
 			if( organizationObj!=null) ldapUserInfo.organization = organizationObj.toString();
 			if( streetObj!=null) ldapUserInfo.street = streetObj.toString().replace("street:","");
-			if( countryObj!=null) ldapUserInfo.country = countryObj.toString();
-			if( personalTitleObj!=null) ldapUserInfo.personalTitle = personalTitleObj.toString();
-			if( localityNameObj!=null) ldapUserInfo.city = localityNameObj.toString();
+			if( countryObj!=null) ldapUserInfo.country = countryObj.toString().replace("c:","");
+			if( personalTitleObj!=null)
+				{
+					ldapUserInfo.personalTitle = personalTitleObj.toString();
+					 user.getContact().setPrefixId( getPrefixId( personalTitleObj.toString().trim() ));
+				}
+			if( localityNameObj!=null) ldapUserInfo.city = localityNameObj.toString().replace("l:","");
 						
 			System.out.println(" ############## ldapUserInfo  "+ldapUserInfo );
 			System.out.println(" ############## ldapUserInfo.surName  "+ldapUserInfo.surName + " communicationUri :"+ attrs.get("communicationUri") );
@@ -291,6 +295,72 @@ public class LDAPUtil
 		System.out.println(" ############## END  LDAPUtil.getAttributeValueListByName #####################"+commuriList );
 		return commuriList;
 	}
+	public static int getPrefixId( String prefix )
+	{
+		System.out.println(" ############## START  LDAPUtil.getPrefixId ##################### prefix: "+prefix );	
+		
+		if( prefix!=null&& prefix!="")
+		{
+			System.out.println(" in");
+			if(prefix.equalsIgnoreCase("Dr"))
+			{ System.out.println(" in1");
+				return 11014;
+			}else if(prefix.equalsIgnoreCase("Mr"))
+			{System.out.println(" in33434");
+			return 11015;
+			}else if(prefix.equalsIgnoreCase("Miss"))
+			{System.out.println(" in55454");
+			return 11017;
+			}else if(prefix.equalsIgnoreCase("Mrs"))
+			{System.out.println(" in233");
+			return 11016;
+			}else if(prefix.equalsIgnoreCase("Pr"))
+			{System.out.println(" in4");
+			return 11020;
+			}
+		}
+		System.out.println(" ############## END  LDAPUtil.getPrefixId ##################### prefix: "+prefix );	
+		return 11015;
+	}
+	public static void setPrefix( Contact contact, String prefix)
+	{
+		System.out.println(" ############## START  LDAPUtil.setPrefix ##################### prefix: "+prefix );	
+		
+		if( prefix!=null&& prefix!="")
+		{
+			prefix=prefix.trim().toLowerCase();
+			int mrVal = prefix.indexOf("mr");
+			int drVal = prefix.indexOf("dr");
+			int mrsVal = prefix.indexOf("mrs");
+			int missVal = prefix.indexOf("miss");
+			int prVal = prefix.indexOf("pr");
+			
+		
+			//contact.setPrefixId(11014);
+			if(drVal>0 )
+			{ System.out.println(" in1");
+				contact.setPrefixId(11014);
+			}
+			else if(mrVal>0)
+			{System.out.println(" in33434");
+				contact.setPrefixId(11015);
+			}
+			else if(missVal>0)
+			{System.out.println(" in55454");
+				contact.setPrefixId(11017);
+			}
+			else if(mrsVal>0)
+			{System.out.println(" in233");
+				contact.setPrefixId(11016);
+			}
+			else if(prVal>0)
+			{System.out.println(" in4");
+				contact.setPrefixId(11020);
+			}
+		}
+		System.out.println(" ############## END  LDAPUtil.setPrefix ##################### prefix: "+contact.getPrefixId() );	
+		
+	}
 	public static void beforeUpdateContact( Contact contact)
 	{
 		System.out.println(" ############## START  LDAPUtil.beforeUpdateContact ##################### contact: "+contact );		
@@ -299,7 +369,14 @@ public class LDAPUtil
 				
 			 User user=UserLocalServiceUtil.getUserByContactId( contact.getContactId());
 			 DirContext ctx = getLDAPContext(user);	
-			 Attributes attrs = getAllAttributes( ctx, user );			 
+			 Attributes attrs = getAllAttributes( ctx, user );	
+			 Object personalTitleObj = attrs.get("personalTitle");
+			 if( personalTitleObj!=null && personalTitleObj!="" && contact.getPrefixId()==0 )
+			 {
+				 setPrefix(contact, personalTitleObj.toString().trim() );
+				 System.out.println(" personalTitleObj "+ personalTitleObj.toString() );
+			 }
+			 
 			 List<String> commuriList = getAttributeValueListByName( attrs ,"communicationUri");		
 			 if( commuriList!=null)
 			 {
@@ -310,8 +387,12 @@ public class LDAPUtil
 					else if (temp.indexOf("msnim") != -1){ temp = temp.replace("msnim:chat?contact=",""); contact.setMsnSn( temp );	}
 					else if (temp.indexOf("skype") != -1) { temp = temp.replace("skype:","");contact.setSkypeSn( temp );}
 					else if (temp.indexOf("sip") != -1 ){ temp = temp.replace("sip:",""); contact.setAimSn( temp );}
-					else if (temp.indexOf("VHF") != -1  ){ temp = temp.replace("VHFcallsign:",""); contact.setJabberSn( temp );	}					
-				}
+					else if (temp.indexOf("VHF") != -1  ){ temp = temp.replace("VHFcallsign:",""); contact.setJabberSn( temp );	}	
+					else if (temp.indexOf("http") != -1 && temp.indexOf("facebook")!=-1 ){ temp = temp.replace("http:",""); contact.setFacebookSn( temp );	}	
+					else if (temp.indexOf("http") != -1 && temp.indexOf("linkedin")!=-1 ){ temp = temp.replace("http:",""); contact.setMySpaceSn( temp );	}	
+					else if (temp.indexOf("http") != -1 && temp.indexOf("twitter")!=-1 ){ temp = temp.replace("http:",""); contact.setTwitterSn( temp );	}	
+					
+			 	 }
 			}			
 		}
 		catch(Exception e) { e.printStackTrace(); }
@@ -345,11 +426,7 @@ public class LDAPUtil
 					 							user.getPassword(),
 					 							false,
 					 							true);*/
-			 UserLocalServiceUtil.updatePasswordManually(user.getUserId(),
-					 									user.getPassword(),
-					 									true,
-					 									false,
-					 									new java.util.Date() );
+		
 			 
 			
 			 System.out.println(" 1  isPwdModified");
@@ -360,6 +437,12 @@ public class LDAPUtil
 			 System.out.println(" eeerere  ");
 			 user.setPasswordModified(false);
 			 System.out.println(" 222bbvbvbv22222  ");
+			 
+			 UserLocalServiceUtil.updatePasswordManually(user.getUserId(),
+						user.getPassword(),
+						true,
+						false,
+						new java.util.Date() );
 			 
 				 
 				
@@ -373,17 +456,28 @@ public class LDAPUtil
 	public static void updateContact(Contact  contact, boolean isBefore)
 	{
 		
-		System.out.println(" ############## START  LDAPUtil.updateContact ##################### contact: "+contact );		
+		System.out.println(" ############## START  LDAPUtil.updateContact ##################### prefix: "+contact.getPrefixId() );		
 		try 
 		{	
 			
 			 //DirContext ctx = getLDAPContextByContact(contact);	
 			 User user=UserLocalServiceUtil.getUserByContactId( contact.getContactId());
 			 DirContext ctx = getLDAPContext(user);	
+			 int size=1;
+			 
+			 String prefix =ListTypeServiceUtil.getListType(user.getContact().getPrefixId()).getName();
+		
+			 if( prefix!=null && prefix!="" ){ 
+				 size=2;
+				 
+				 prefix = toInitCap(prefix);
+			 }
 			
-			 ModificationItem[]  mods= new ModificationItem[1];			
+			 System.out.println(" prefix prefix "+ prefix + "size"+size );
+			 ModificationItem[]  mods= new ModificationItem[size];			
 			 //getIcqSn -> gtalk, sip/lync ->aim 
-			 Attribute mod0 = new BasicAttribute("communicationUri");			 
+			 Attribute mod0 = new BasicAttribute("communicationUri");		
+			 Attribute mod1 = new BasicAttribute("personalTitle");		
 			 String skype = contact.getSkypeSn();
 			 String sip = contact.getAimSn();
 			 String gtalk = contact.getIcqSn();
@@ -400,8 +494,17 @@ public class LDAPUtil
 			 if(contact.getMsnSn()!=null&& contact.getMsnSn()!="" )  mod0.add("msnim:chat?contact="+contact.getMsnSn());	
 			 if(contact.getSkypeSn()!=null&& contact.getSkypeSn()!="" ) mod0.add("skype:"+contact.getSkypeSn());	
 			 if(contact.getAimSn()!=null&& contact.getAimSn()!="" )  mod0.add("sip:"+contact.getAimSn());
+			 if(contact.getFacebookSn()!=null&& contact.getFacebookSn()!="" )  mod0.add("http:"+contact.getFacebookSn().replace("http://","") );
+			 if(contact.getTwitterSn()!=null&& contact.getTwitterSn()!="" )  mod0.add("http:"+contact.getTwitterSn().replace("http://",""));
+			 if(contact.getMySpaceSn()!=null&& contact.getMySpaceSn()!="" )  mod0.add("http:"+contact.getMySpaceSn().replace("http://",""));
 			 
 			 mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod0);
+			 
+			 if(size>1)
+			 {
+				 mod1.add(prefix);
+				 mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1 );
+			 }
 			 ctx.modifyAttributes("ldap://ldap-dev.globalepic.lu:389/uid="+screenName +",ou=users,ou=people,dc=emergency,dc=lu", mods);
 			 System.out.println(" ############## 44444444 contact :"+ contact );
 			 //mods[1] = new ModificationItem(DirContext.ADD_ATTRIBUTE, mod1);
@@ -597,10 +700,9 @@ public class LDAPUtil
 			 Attribute mod1 = new BasicAttribute("street");
 			 Attribute mod2 = new BasicAttribute("l");
 			 Attribute mod3 = new BasicAttribute("c");
-		
-			 mod0.add( address.getZip() );
-			 mod1.add( address.getStreet1() );
-			 mod2.add( address.getCity() );			
+			 if(address.getZip()!=null)	 mod0.add( address.getZip().trim() );
+			 if(address.getStreet1()!=null)mod1.add( address.getStreet1().trim() );
+			 if(address.getCity()!=null)mod2.add( address.getCity().trim() );				 
 			 mod3.add(getCountryCodeById( address.getCountryId() ) );
 			 
 			 mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod0);
@@ -762,5 +864,14 @@ public class LDAPUtil
 		catch(Exception e){ e.printStackTrace(); }
 		System.out.println(" ############## END  LDAPUtil.updateUser ##################### " );		
 		
+	}
+	public static String toInitCap(String param) {
+		if(param != null && param.length()>0){			
+			char[] charArray = param.toCharArray(); // convert into char array
+			charArray[0] = Character.toUpperCase(charArray[0]); // set capital letter to first postion
+			return new String(charArray); // return desired output
+		}else{
+			return "";
+		}
 	}
 }
