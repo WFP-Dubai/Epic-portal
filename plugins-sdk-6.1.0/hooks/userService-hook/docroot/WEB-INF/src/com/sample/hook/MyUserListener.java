@@ -39,6 +39,7 @@ import com.liferay.portal.service.ServiceContextThreadLocal;
 
 import com.liferay.portal.service.UserLocalServiceUtil;
 
+
 import com.liferay.portal.service.ContactLocalServiceUtil;
 
 import java.io.Serializable;
@@ -91,7 +92,10 @@ public class MyUserListener extends BaseModelListener<User>
 	 		{
 	 			
 	 			if( user.getPasswordUnencrypted() != null )
+	 			{
 	 			user.setComments( user.getPasswordUnencrypted() );
+	 		
+	 			}
 	 			
 	 			System.out.println(" #####  user.getComments() :"+user.getComments() );
 	 			if( user.getPasswordUnencrypted()!=null&& user.getPasswordUnencrypted()!="" &&  !user.isPasswordModified())
@@ -138,28 +142,34 @@ public class MyUserListener extends BaseModelListener<User>
 			LDAPUtil.user = user;
 			try
 			{	/* Not allowing user to remove all Phone numbers. */
-				if( user.getPhones()!= null && user.getPhones().size()>0 &&  !user.isPasswordModified() )
-				{
-					LDAPUtil.exportPhones( user );
-				}
-				if( user.getAddresses()== null || user.getAddresses().size()==0  )
-				{
-					//LDAPUtil.importAddresses( user );
-				}
+			
 				if( user.isPasswordModified() && user.getPasswordUnencrypted()!=null )
 				{
 					//String pwd = user.getPasswordUnencrypted();						
 					// LDAPUtil.updatePassword( pwd );
 					String pwd = user.getPassword();
 					if( pwd!=null && pwd.length()> 0 ){
-					//LDAPUtil.updatePassword( user );
+					LDAPUtil.updatePassword( user );
+					
 					}
 					
 				}
-				//user.setPasswordUnencrypted( LiferayUsersMapDAO.getPlainPassword( user.getUserId()) );
-				System.out.println(" END Password Modified :comments :"+ user.getComments()+":  unecrypted :" +user.getPasswordUnencrypted() );
-				
-				LDAPUtil.updateUser(user);
+				else
+				{
+					if( user.getPhones()!= null && user.getPhones().size()>0 &&  !user.isPasswordModified() )
+					{
+						LDAPUtil.exportPhones( user );
+					}
+					if( user.getAddresses()== null || user.getAddresses().size()==0  )
+					{
+						//LDAPUtil.importAddresses( user );
+					}
+					//user.setPasswordUnencrypted( LiferayUsersMapDAO.getPlainPassword( user.getUserId()) );
+					com.liferay.portal.theme.ThemeDisplay td = new com.liferay.portal.theme.ThemeDisplay();
+					System.out.println("  :getPortraitURL :"+ user.getPortraitURL( td ) +":  unecrypted :" +user.getPasswordUnencrypted() );
+					
+					LDAPUtil.updateUser(user);
+				}
 				
 			}
 			catch(Exception e){ e.printStackTrace(); }			
