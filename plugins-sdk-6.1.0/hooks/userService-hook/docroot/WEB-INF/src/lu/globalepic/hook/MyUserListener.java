@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.sample.hook;
+package lu.globalepic.hook;
 
 import com.liferay.portal.ModelListenerException;
 import com.sample.util.*;
@@ -47,7 +47,9 @@ import java.io.Serializable;
 import java.util.List;
 
 import java.util.Map;
-import com.sample.util.LDAPUtil;
+
+import lu.globalepic.util.LDAPUtil;
+
 import com.liferay.portal.service.PhoneLocalServiceUtil;
 import com.liferay.portal.service.ListTypeServiceUtil;
 import com.liferay.portal.model.ListTypeConstants;

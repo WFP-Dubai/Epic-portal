@@ -11,7 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-package com.sample.hook;
+package lu.globalepic.hook;
 
 import com.sample.util.*;
 
@@ -43,6 +43,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import java.util.Map;
+
+import lu.globalepic.util.LDAPUtil;
 
 /**
  * 
