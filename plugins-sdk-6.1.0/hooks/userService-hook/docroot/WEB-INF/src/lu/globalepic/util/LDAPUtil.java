@@ -24,6 +24,8 @@ import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 import com.liferay.portal.model.Address;
 import com.liferay.portal.model.Contact;
@@ -58,17 +60,18 @@ public class LDAPUtil
 	
 	public static User user =null;
 	
+	private static Log _log = LogFactoryUtil.getLog(LDAPUtil.class);
 	
 	public  static DirContext  getLDAPContextByAddress(Address address)
 	{
-		System.out.println(" ############## START  LDAPUtil.getLDAPContextByAddress #####################");
+		_log.info(" ############## START  LDAPUtil.getLDAPContextByAddress #####################");
 		
 		
 		DirContext ctx = null;
 		try{
 			
 			User user = UserLocalServiceUtil.getUserById( address.getUserId() );
-			 System.out.println( " user "+user );
+			 _log.info( " user "+user );
 			
 			 ctx = getLDAPContext( user );
 			}catch(Exception e)
@@ -76,23 +79,23 @@ public class LDAPUtil
 				}
 			
 		
-		System.out.println(" ############## END  LDAPUtil.getLDAPContextByAddress #####################");
+		_log.info(" ############## END  LDAPUtil.getLDAPContextByAddress #####################");
 		
 		return ctx;
 
 	}
 	public  static DirContext  getLDAPContextByContact(Contact contact)
 	{
-		System.out.println(" ############## START  LDAPUtil.getLDAPContextByContact #####################");
+		_log.info(" ############## START  LDAPUtil.getLDAPContextByContact #####################");
 		DirContext ctx = null;
 		try{
 		User user = UserLocalServiceUtil.getUserByContactId( contact.getContactId() );
-		System.out.println( " user "+user );
+		_log.info( " user "+user );
 		 ctx = getLDAPContext( user );
 		}catch(Exception e){// e.printStackTrace();
 			
 		}
-		System.out.println(" ############## END  LDAPUtil.getLDAPContextByContact #####################");
+		_log.info(" ############## END  LDAPUtil.getLDAPContextByContact #####################");
 		
 		return ctx;
 
@@ -100,11 +103,11 @@ public class LDAPUtil
 	
 	public static DirContext  getLDAPContext(User user)
 	{
-		System.out.println(" ############## START  LDAPUtil.getLDAPContext #####################"+user.getScreenName()+"getPasswordUnecrypted "+user.getPasswordUnencrypted() );
+		_log.info(" ############## START  LDAPUtil.getLDAPContext #####################"+user.getScreenName() );
 		Hashtable env = new Hashtable(5, 0.75f);	
 		
 		DirContext ctx = null;
-		if( user!=null)System.out.println(" # "+user.getPasswordUnencrypted()  );
+		if( user!=null)_log.debug(" # "+user.getPasswordUnencrypted()  );
 
 		// env.put(LdapContext.CONTROL_FACTORIES,
 		// conf.getProperty("ldap.factories.control"));
@@ -117,7 +120,7 @@ public class LDAPUtil
 				"uid="+user.getScreenName()+",ou=users,ou=people,dc=emergency,dc=lu");
 		//env.put(Context.SECURITY_CREDENTIALS, "My3CatsOnATree");
 		String pwd = LiferayUsersMapDAO.getPlainPassword( user.getUserId() );
-		System.out.println("##### pwd : plain : "+pwd );
+		_log.debug("##### pwd : plain : "+pwd );
 		
 		env.put(Context.SECURITY_CREDENTIALS, pwd );
 		env.put(Context.STATE_FACTORIES, "PersonStateFactory");
@@ -135,7 +138,7 @@ public class LDAPUtil
 		{
 			/* get a handle to an Initial DirContext */
 			//DirContext ctx = new InitialDirContext(env);	
-			System.out.println(" ############## END  LDAPUtil.getLDAPContext #####################");
+			_log.info(" ############## END  LDAPUtil.getLDAPContext #####################");
 			ctx=  new InitialDirContext(env);
 		}
 		catch(Exception e){	//e.printStackTrace();
@@ -149,23 +152,23 @@ public class LDAPUtil
 	public static LDAPUserInfo getLDAPUserInfoByContact( Contact contact )
 	{
 		
-		System.out.println(" ############## START  LDAPUtil.getLDAPUser #####################");
+		_log.info(" ############## START  LDAPUtil.getLDAPUser #####################");
 		User user = null;
 		try{
 		 user = UserLocalServiceUtil.getUserByContactId( contact.getContactId() );
-		 System.out.println(" user"+user );
+		 _log.info(" user"+user );
 		}catch(Exception e){ //e.printStackTrace();
 			
 		}
 				
-		System.out.println(" ############## END  LDAPUtil.getLDAPUser #####################");
+		_log.info(" ############## END  LDAPUtil.getLDAPUser #####################");
 		return getLDAPUserInfo(user);
 	}
 	
 	public static LDAPUserInfo getLDAPUserInfo( User user )
 	{
 		
-		System.out.println(" ############## START  LDAPUtil.getLDAPUser ##################### user"+user.getPasswordUnencrypted());
+		_log.info(" ############## START  LDAPUtil.getLDAPUser ##################### user"+user.getPasswordUnencrypted());
 		
 		LDAPUserInfo ldapUserInfo = new LDAPUserInfo();
 		
@@ -177,13 +180,13 @@ public class LDAPUtil
 		
 		populateLDAPUser(ldapUserInfo, attrs, user ) ;
 		
-		System.out.println(" ############## END  LDAPUtil.getLDAPUser #####################");
+		_log.info(" ############## END  LDAPUtil.getLDAPUser #####################");
 		return ldapUserInfo;
 	}
 	
 	public static Attributes getAllAttributes(DirContext ctx, User user)
 	{
-		System.out.println(" ############## START  LDAPUtil.getAllAttributes ##################### screenName :"+screenName);
+		_log.info(" ############## START  LDAPUtil.getAllAttributes ##################### screenName :"+screenName);
 		// Specify the search filter
 		Attributes attrs = null;
 		try
@@ -197,27 +200,27 @@ public class LDAPUtil
 		SearchControls ctls = new SearchControls();
 		ctls.setReturningAttributes(attrIDs);
 		ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-		System.out.println(" 1");
+		_log.info(" 1");
 		// Search for objects using filter and controls
 		NamingEnumeration answer = ctx.search(
 				"ldap://ldap-dev.globalepic.lu:389/uid=" + screenName
 						+ ",ou=users,ou=people,dc=emergency,dc=lu", FILTER,
 				ctls);
-		System.out.println("2");
+		_log.info("2");
 		SearchResult sr = (SearchResult) answer.next();
-		System.out.println(" 3");
+		_log.info(" 3");
 		
 		 attrs = sr.getAttributes();
 		}
 		catch(Exception e) { e.printStackTrace(); }
 		
-		System.out.println(" ############## END  LDAPUtil.getAllAttributes #####################");
+		_log.info(" ############## END  LDAPUtil.getAllAttributes #####################");
 		
 		return attrs;
 	}
 	public static void populateLDAPUser(LDAPUserInfo ldapUserInfo, Attributes attrs, User user ) 
 	{	
-		System.out.println(" ############## START  LDAPUtil.populateLDAPUser #####################");		
+		_log.info(" ############## START  LDAPUtil.populateLDAPUser #####################");		
 		try
 		{
 			//screenName = attrs.get("uid").toString();
@@ -244,8 +247,8 @@ public class LDAPUtil
 				}
 			if( localityNameObj!=null) ldapUserInfo.city = localityNameObj.toString().replace("l:","");
 						
-			System.out.println(" ############## ldapUserInfo  "+ldapUserInfo );
-			System.out.println(" ############## ldapUserInfo.surName  "+ldapUserInfo.surName + " communicationUri :"+ attrs.get("communicationUri") );
+			_log.info(" ############## ldapUserInfo  "+ldapUserInfo );
+			_log.info(" ############## ldapUserInfo.surName  "+ldapUserInfo.surName + " communicationUri :"+ attrs.get("communicationUri") );
 			
 			List<String> commuriList = null;
 			
@@ -256,7 +259,7 @@ public class LDAPUtil
 			for (int j = 0; commuriList!=null&& j < commuriList.size(); j++)
 			{
 				String temp = commuriList.get(j);	
-				System.out.println(" ############## temp "+temp );
+				_log.info(" ############## temp "+temp );
 				if (temp.indexOf("gtalk") != -1) {
 					ldapUserInfo.gtalk = temp.replace("gtalk:chat?jid=","");					
 				} else if (temp.indexOf("msnim") != -1) {
@@ -271,12 +274,12 @@ public class LDAPUtil
 			}
 		}
 		catch(Exception e) { e.printStackTrace(); }
-		System.out.println(" ############## END  LDAPUtil.populateLDAPUser #####################");
+		_log.info(" ############## END  LDAPUtil.populateLDAPUser #####################");
 		
 	}
 	public static List<String> getAttributeValueListByName(Attributes attrs, String attributeName )
 	{
-		System.out.println(" ############## START  LDAPUtil.getAttributeValueListByName #####################"+attributeName);
+		_log.info(" ############## START  LDAPUtil.getAttributeValueListByName #####################"+attributeName);
 		List<String> commuriList = null;	
 		int i=0;
 		try
@@ -294,39 +297,39 @@ public class LDAPUtil
 			}
 		}
 		catch(Exception e){ e.printStackTrace(); }
-		System.out.println(" ############## END  LDAPUtil.getAttributeValueListByName #####################"+commuriList );
+		_log.info(" ############## END  LDAPUtil.getAttributeValueListByName #####################"+commuriList );
 		return commuriList;
 	}
 	public static int getPrefixId( String prefix )
 	{
-		System.out.println(" ############## START  LDAPUtil.getPrefixId ##################### prefix: "+prefix );	
+		_log.info(" ############## START  LDAPUtil.getPrefixId ##################### prefix: "+prefix );	
 		
 		if( prefix!=null&& prefix!="")
 		{
-			System.out.println(" in");
+			_log.info(" in");
 			if(prefix.equalsIgnoreCase("Dr"))
-			{ System.out.println(" in1");
+			{ _log.info(" in1");
 				return 11014;
 			}else if(prefix.equalsIgnoreCase("Mr"))
-			{System.out.println(" in33434");
+			{_log.info(" in33434");
 			return 11015;
 			}else if(prefix.equalsIgnoreCase("Miss"))
-			{System.out.println(" in55454");
+			{_log.info(" in55454");
 			return 11017;
 			}else if(prefix.equalsIgnoreCase("Mrs"))
-			{System.out.println(" in233");
+			{_log.info(" in233");
 			return 11016;
 			}else if(prefix.equalsIgnoreCase("Pr"))
-			{System.out.println(" in4");
+			{_log.info(" in4");
 			return 11020;
 			}
 		}
-		System.out.println(" ############## END  LDAPUtil.getPrefixId ##################### prefix: "+prefix );	
+		_log.info(" ############## END  LDAPUtil.getPrefixId ##################### prefix: "+prefix );	
 		return 11015;
 	}
 	public static void setPrefix( Contact contact, String prefix)
 	{
-		System.out.println(" ############## START  LDAPUtil.setPrefix ##################### prefix: "+prefix );	
+		_log.info(" ############## START  LDAPUtil.setPrefix ##################### prefix: "+prefix );	
 		
 		if( prefix!=null&& prefix!="")
 		{
@@ -340,32 +343,32 @@ public class LDAPUtil
 		
 			//contact.setPrefixId(11014);
 			if(drVal>0 )
-			{ System.out.println(" in1");
+			{ _log.info(" in1");
 				contact.setPrefixId(11014);
 			}
 			else if(mrVal>0)
-			{System.out.println(" in33434");
+			{_log.info(" in33434");
 				contact.setPrefixId(11015);
 			}
 			else if(missVal>0)
-			{System.out.println(" in55454");
+			{_log.info(" in55454");
 				contact.setPrefixId(11017);
 			}
 			else if(mrsVal>0)
-			{System.out.println(" in233");
+			{_log.info(" in233");
 				contact.setPrefixId(11016);
 			}
 			else if(prVal>0)
-			{System.out.println(" in4");
+			{_log.info(" in4");
 				contact.setPrefixId(11020);
 			}
 		}
-		System.out.println(" ############## END  LDAPUtil.setPrefix ##################### prefix: "+contact.getPrefixId() );	
+		_log.info(" ############## END  LDAPUtil.setPrefix ##################### prefix: "+contact.getPrefixId() );	
 		
 	}
 	public static void beforeUpdateContact( Contact contact)
 	{
-		System.out.println(" ############## START  LDAPUtil.beforeUpdateContact ##################### contact: "+contact );		
+		_log.info(" ############## START  LDAPUtil.beforeUpdateContact ##################### contact: "+contact );		
 		try 
 		{		
 				
@@ -376,7 +379,7 @@ public class LDAPUtil
 			 if( personalTitleObj!=null && personalTitleObj!="" && contact.getPrefixId()==0 )
 			 {
 				 setPrefix(contact, personalTitleObj.toString().trim() );
-				 System.out.println(" personalTitleObj "+ personalTitleObj.toString() );
+				 _log.info(" personalTitleObj "+ personalTitleObj.toString() );
 			 }
 			 
 			 List<String> commuriList = getAttributeValueListByName( attrs ,"communicationUri");		
@@ -398,30 +401,30 @@ public class LDAPUtil
 			}			
 		}
 		catch(Exception e) { e.printStackTrace(); }
-		System.out.println(" ############## END  LDAPUtil.beforeUpdateContact #####################contact: "+contact );		
+		_log.info(" ############## END  LDAPUtil.beforeUpdateContact #####################contact: "+contact );		
 		
 	}
 	public static void updatePassword(User user)
 	{
 		
-		System.out.println(" ############## START  LDAPUtil.updatePassword ##################### " );		
+		_log.info(" ############## START  LDAPUtil.updatePassword ##################### " );		
 		try 
 		{	
 			
 			 DirContext ctx = getLDAPContext(user);	
-			 System.out.println(" 1"+ user.getPassword());
+			 _log.info(" 1"+ user.getPassword());
 			 ModificationItem[]  mods= new ModificationItem[1];	
 			 Attribute mod0 = new BasicAttribute("userPassword");	
 			 mod0.add("{SHA}"+user.getPassword() );
-			 System.out.println(" user.getPassword() "+user.getPassword() +" user.getPasswordUnencrypted()"+user.getPasswordUnencrypted());
-			 System.out.println(" 2");
+			 _log.info(" user.getPassword() "+user.getPassword() +" user.getPasswordUnencrypted()"+user.getPasswordUnencrypted());
+			 _log.info(" 2");
 			 mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod0);
-			 System.out.println(" 3"+user.getScreenName() );
-//			 System.out.println(" ############## 44444444 password :"+ user.getPassword() );
+			 _log.info(" 3"+user.getScreenName() );
+//			 _log.info(" ############## 44444444 password :"+ user.getPassword() );
 			 ctx.modifyAttributes("ldap://ldap-dev.globalepic.lu:389/uid="+user.getScreenName() +",ou=users,ou=people,dc=emergency,dc=lu", mods);
 //			 LiferayUsersMapDAO.storePassword( user.getUserId(), user.getPasswordUnencrypted());
-			 System.out.println(" 4444444444");
-//			 System.out.println(" ############## 44444444 password :"+ user.getPassword() );
+			 _log.info(" 4444444444");
+//			 _log.info(" ############## 44444444 password :"+ user.getPassword() );
 			 
 			 /*UserLocalServiceUtil.updatePassword(user.getUserId(),
 					 							user.getPassword(),
@@ -431,14 +434,14 @@ public class LDAPUtil
 		
 			 
 			
-			 System.out.println(" 1  isPwdModified");
+			 _log.info(" 1  isPwdModified");
 			 boolean isPwdModified = LiferayUsersMapDAO.storePassword( user.getUserId(),user.getPasswordUnencrypted() );
-			 System.out.println(" 22222222  ");
+			 _log.info(" 22222222  ");
 //			 LiferayUsersMapDAO.updateOriginalPassword( user.getUserId(),user.getPassword() );
 			 user.setPasswordUnencrypted(null);
-			 System.out.println(" eeerere  ");
+			 _log.info(" eeerere  ");
 			 user.setPasswordModified(false);
-			 System.out.println(" 222bbvbvbv22222  ");
+			 _log.info(" 222bbvbvbv22222  ");
 //			 FIXME: not working local save???? 
 			 UserLocalServiceUtil.updatePasswordManually(user.getUserId(),
 						user.getPassword(),
@@ -448,17 +451,17 @@ public class LDAPUtil
 			 
 				 
 				
-				// System.out.println(" 3 isPwdModified"+isPwdModified);
+				// _log.info(" 3 isPwdModified"+isPwdModified);
 			 
 		}
 		catch(Exception e){ e.printStackTrace(); }
-		System.out.println(" ############## END  LDAPUtil.updatePassword ##################### " );		
+		_log.info(" ############## END  LDAPUtil.updatePassword ##################### " );		
 		
 	}
 	public static void updateContact(Contact  contact, boolean isBefore)
 	{
 		
-		System.out.println(" ############## START  LDAPUtil.updateContact ##################### prefix: "+contact.getPrefixId() );		
+		_log.info(" ############## START  LDAPUtil.updateContact ##################### prefix: "+contact.getPrefixId() );		
 		try 
 		{	
 			
@@ -475,7 +478,7 @@ public class LDAPUtil
 				 prefix = toInitCap(prefix);
 			 }
 			
-			 System.out.println(" prefix prefix "+ prefix + "size"+size );
+			 _log.info(" prefix prefix "+ prefix + "size"+size );
 			 ModificationItem[]  mods= new ModificationItem[size];			
 			 //getIcqSn -> gtalk, sip/lync ->aim 
 			 Attribute mod0 = new BasicAttribute("communicationUri");		
@@ -508,19 +511,19 @@ public class LDAPUtil
 				 mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1 );
 			 }
 			 ctx.modifyAttributes("ldap://ldap-dev.globalepic.lu:389/uid="+screenName +",ou=users,ou=people,dc=emergency,dc=lu", mods);
-			 System.out.println(" ############## 44444444 contact :"+ contact );
+			 _log.info(" ############## 44444444 contact :"+ contact );
 			 //mods[1] = new ModificationItem(DirContext.ADD_ATTRIBUTE, mod1);
 			// mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
 			
 		}
 		catch(Exception e) { e.printStackTrace(); }
-		System.out.println(" ############## END  LDAPUtil.updateContact #####################");
+		_log.info(" ############## END  LDAPUtil.updateContact #####################");
 		
 	}
 	
 	public static List<String> getLDAPPhoneByScreenName( User user )
 	{
-		System.out.println(" ############## START  LDAPUtil.getLDAPPhoneByScreenName ##################### user: "+user );
+		_log.info(" ############## START  LDAPUtil.getLDAPPhoneByScreenName ##################### user: "+user );
 		List<String> phoneList = null;
 		try 
 		{
@@ -529,13 +532,13 @@ public class LDAPUtil
 			phoneList = getAttributeValueListByName( attrs ,"telephoneNumber");
 		}
 		catch(Exception e) { e.printStackTrace(); }			 
-	   System.out.println(" ############## END  LDAPUtil.getLDAPPhoneByScreenName ##################### user: "+user );	
+	   _log.info(" ############## END  LDAPUtil.getLDAPPhoneByScreenName ##################### user: "+user );	
 	   
 	   return phoneList;
 	}
 	public static void importPhones(User user )
 	{
-		System.out.println(" ############## START  LDAPUtil.importLDAPPhones user "+user);
+		_log.info(" ############## START  LDAPUtil.importLDAPPhones user "+user);
 		try
  		{
  			LDAPUtil.screenName=user.getScreenName();
@@ -552,12 +555,12 @@ public class LDAPUtil
 			for (ListType phoneType : phoneTypes) 
 			{
 			     String phoneTypeName = phoneType.getName();
-			     System.out.println(" phoneTypeName : "+phoneTypeName );
+			     _log.info(" phoneTypeName : "+phoneTypeName );
 			     if ("personal".equals(phoneTypeName)) { phoneTypeId = phoneType.getListTypeId();   }
 			    // if ("personal-fax".equals(phoneTypeName)) { phoneTypeId = phoneType.getListTypeId();     }
 			 }	
 			List<String> phoneList = getLDAPPhoneByScreenName( user );
-			System.out.println(" phoneList from LDAP : "+ phoneList );
+			_log.info(" phoneList from LDAP : "+ phoneList );
 			
 			if( phoneList!=null && phoneList.size()>0)
 			{
@@ -575,8 +578,9 @@ public class LDAPUtil
 						phnArray = number.split("x");
 						ext=phnArray[1];
 						number=phnArray[0];
+						_log.info(" IT HAS EXTENSION");
 					}
-					System.out.println(" phn : "+ phn + ": number : "+number+ " ext :"+ext +" phoneTypeId :"+ phoneTypeId ); 
+					_log.info(" phn : "+ phn + ": number : "+number+ " ext :"+ext +" phoneTypeId :"+ phoneTypeId ); 
 					PhoneLocalServiceUtil.addPhone(user.getUserId(), Contact.class.getName(),  user.getContactId(), number, ext, listType_business, true);		            
 				}
 				else if( phn.indexOf("WAVE")!=-1|| phn.indexOf("Wave")!=-1)
@@ -584,7 +588,7 @@ public class LDAPUtil
 					String phnArray [] = phn.split("WAVE:");
 					if( phnArray==null || phnArray.length==0 ) phnArray = phn.split("Wave:");			
 					String number = phnArray[1];				
-					System.out.println(" phn : "+ phn + ": number : "+number+ " phoneTypeId :"+ phoneTypeId + "phnArray:"+phnArray ); 
+					_log.info(" phn : "+ phn + ": number : "+number+ " phoneTypeId :"+ phoneTypeId + "phnArray:"+phnArray ); 
 					PhoneLocalServiceUtil.addPhone(user.getUserId(), Contact.class.getName(),  user.getContactId(), number, "", listType_wave, true);		            
 				}
 				else if( phn.indexOf("Foodsat")!=-1|| phn.indexOf("foodsat")!=-1)
@@ -592,32 +596,32 @@ public class LDAPUtil
 					String phnArray [] = phn.split("Foodsat:");
 					if( phnArray==null || phnArray.length==0 ) phnArray = phn.split("foodsat:");			
 					String number = phnArray[1];				
-					System.out.println(" phn : "+ phn + ": number : "+number+ " phoneTypeId :"+ phoneTypeId ); 
+					_log.info(" phn : "+ phn + ": number : "+number+ " phoneTypeId :"+ phoneTypeId ); 
 					PhoneLocalServiceUtil.addPhone(user.getUserId(), Contact.class.getName(),  user.getContactId(), number, "", listType_foodsat, true);		            
 				}
 				else if( phn.indexOf("Thuraya")!=-1 || phn.indexOf("thuraya")!=-1)
 				{
 					String phnArray [] = phn.split("Thuraya:");
 					String number = phnArray[1];				
-					System.out.println(" phn : "+ phn + ": number : "+number +" phoneTypeId :"+ phoneTypeId ); 
+					_log.info(" phn : "+ phn + ": number : "+number +" phoneTypeId :"+ phoneTypeId ); 
 					PhoneLocalServiceUtil.addPhone(user.getUserId(), Contact.class.getName(),  user.getContactId(), number, "", listType_thuraya, true);		            
 				}
 				else if( phn.indexOf("Mobile")!=-1 || phn.indexOf("mobile")!=-1 )
 				{
 					String phnArray [] = phn.split("Mobile:");
 					String number = phnArray[1];				
-					System.out.println(" phn : "+ phn + ": number : "+number +" phoneTypeId :"+ phoneTypeId ); 
+					_log.info(" phn : "+ phn + ": number : "+number +" phoneTypeId :"+ phoneTypeId ); 
 					PhoneLocalServiceUtil.addPhone(user.getUserId(), Contact.class.getName(),  user.getContactId(), number, "", listType_mobile, true);		            
 				}
 					
 				
 			}
 			
-	        System.out.println("Handling bug LPS-17381: user.getContactId() " + user.getContactId());
+	        _log.info("Handling bug LPS-17381: user.getContactId() " + user.getContactId());
 	        isPhoneAdded = true;    
 			}
            
- 			System.out.println(" #####  END LDAPUtil.importLDAPPHones  ");
+ 			_log.info(" #####  END LDAPUtil.importLDAPPHones  ");
  			//super.exportToLDAP(user);
  		}
  		catch (Exception e)
@@ -629,21 +633,21 @@ public class LDAPUtil
 	}
 	public static User getUserByAddress( Address address) throws Exception
 	{
-		System.out.println(" ############## START  LDAPUtil.getUserByAddress address "+address);
+		_log.info(" ############## START  LDAPUtil.getUserByAddress address "+address);
 		User user = UserLocalServiceUtil.getUserById( address.getUserId() );
-		System.out.println(" ############## END  LDAPUtil.getUserByAddress address "+address);
+		_log.info(" ############## END  LDAPUtil.getUserByAddress address "+address);
 		
 		return user;
 		
 	}
 	public static void importAddresses(Address address )
 	{
-		System.out.println(" ############## START  LDAPUtil.importAddresses address "+address);
+		_log.info(" ############## START  LDAPUtil.importAddresses address "+address);
 		try
  		{
 			User user = getUserByAddress( address );
 			LDAPUserInfo  ldapuser = getLDAPUserInfo( user);
-			/*System.out.println(ldapuser.street + " ldapuser.street "+ addressType_business );
+			/*_log.info(ldapuser.street + " ldapuser.street "+ addressType_business );
 			List<Address> addressList = user.getAddresses();
 			long addressId = user.getContactId();
 			if(addressList!=null || addressList.size()>0 )
@@ -651,11 +655,11 @@ public class LDAPUtil
 				for( Address address : addressList )
 				{
 					addressId = address.getAddressId();
-					System.out.println("  inside for : addressId : "+ addressId );
+					_log.info("  inside for : addressId : "+ addressId );
 				}
 			}
 			
-			System.out.println("  outisde : addressId : "+ addressId );
+			_log.info("  outisde : addressId : "+ addressId );
 			Address address = AddressLocalServiceUtil.createAddress( addressId );*/
 			
 			String street = ldapuser.street;
@@ -677,7 +681,7 @@ public class LDAPUtil
 			//address.setMailing(true);
 			///address.setCompanyId( user.getCompanyId() );
 			
-			System.out.println(ldapuser.street + " ldapuser.street : address "+ address  );
+			_log.info(ldapuser.street + " ldapuser.street : address "+ address  );
 			
 			//AddressLocalServiceUtil.addAddress(user.getUserId(), Address.class.getName(), PortalUtil.getClassNameId(Address.class.getName()), ldapuser.street, "", "", "DUBAI", ldapuser.postalCode, 1, 217, addressType_personal, true, true);
 			//AddressLocalServiceUtil.addAddress( address );
@@ -686,16 +690,16 @@ public class LDAPUtil
  		{
  			e.printStackTrace();	
  		}
-		System.out.println(" ############## END  LDAPUtil.importAddresses address ");
+		_log.info(" ############## END  LDAPUtil.importAddresses address ");
 	}
 	public static void exportAddress(Address address )
 	{		
-		System.out.println(" ############## START  LDAPUtil.exportAddress ##################### address: "+address );		
+		_log.info(" ############## START  LDAPUtil.exportAddress ##################### address: "+address );		
 		try 
 		{
 			/* get a handle to an Initial DirContext */
 			User user = UserLocalServiceUtil.getUserById( address.getUserId() );
-			 System.out.println( " user "+user );
+			 _log.info( " user "+user );
 			DirContext ctx = getLDAPContext(user);			
 			ModificationItem[] mods = new ModificationItem[ 4];		 
 			 Attribute mod0 = new BasicAttribute("postalCode");
@@ -713,18 +717,18 @@ public class LDAPUtil
 			 mods[3] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod3);
 			 
 			 ctx.modifyAttributes("ldap://ldap-dev.globalepic.lu:389/uid="+screenName +",ou=users,ou=people,dc=emergency,dc=lu", mods);
-			 System.out.println(" ############## SUCCESS  LDAPUtil.exportAddress ##################### address: "+address );		
+			 _log.info(" ############## SUCCESS  LDAPUtil.exportAddress ##################### address: "+address );		
 				
 			 
 			 
 		}
 		catch(Exception e){e.printStackTrace(); }
-		System.out.println(" ############## END  LDAPUtil.exportAddress ##################### address: "+address );		
+		_log.info(" ############## END  LDAPUtil.exportAddress ##################### address: "+address );		
 		
 	}
 	public static void exportPhones(User user )
 	{		
-		System.out.println(" ############## START  LDAPUtil.exportPhones #####################" );		
+		_log.info(" ############## START  LDAPUtil.exportPhones #####################" );		
 		try 
 		{
 			List<Phone>  phoneList = user.getPhones();
@@ -738,12 +742,16 @@ public class LDAPUtil
 			int i=0;
 			for( Phone phone : phoneList)
 			 {
-				 System.out.println(" ############## phone type Id :"+phone.getTypeId() );
+				 _log.info(" ############## phone type Id :"+phone.getTypeId() );
 				 String ext = phone.getExtension();
 				 if(ext==null)ext="";
 				 switch(phone.getTypeId())
 				 {
-				 	case listType_business :	mod0.add("Office:"+phone.getNumber().trim() ); break;
+				 	case listType_business :	
+				 								if(ext!=null&&ext!="" )
+				 									mod0.add("Office:"+phone.getNumber()+" x"+ext ); 
+				 								else mod0.add("Office:"+phone.getNumber() ); 
+				 								break;
 					case listType_mobile   :	mod0.add("Mobile:"+phone.getNumber().trim() ); break;
 					case listType_wave :		mod0.add("WAVE:"+phone.getNumber().trim() );	  break;
 					case listType_thuraya :		mod0.add("Thuraya:"+phone.getNumber().trim() ); break;												
@@ -752,22 +760,22 @@ public class LDAPUtil
 				
 				 i++;
 			 }			 
-			 System.out.println(" ############## mod0 "+mod0 );			
+			 _log.info(" ############## mod0 "+mod0 );			
 			 if(i>0)
 			 {
 				 mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod0);
 				 ctx.modifyAttributes("ldap://ldap-dev.globalepic.lu:389/uid="+screenName +",ou=users,ou=people,dc=emergency,dc=lu", mods);
 				  
 			 } 
-			 System.out.println(" ############## 44444444");
+			 _log.info(" ############## 44444444");
 		}
 		catch(Exception e) { e.printStackTrace(); }
-		System.out.println(" ############## END  LDAPUtil.exportPhones #####################");
+		_log.info(" ############## END  LDAPUtil.exportPhones #####################");
 		
 	}
 	public static long getCountryIdByCode(String code)
 	 {
-		System.out.println(" ############## START  LDAPUtil.getCountryIdByCode ##################### code "+code);
+		_log.info(" ############## START  LDAPUtil.getCountryIdByCode ##################### code "+code);
 		  try
 		  {
 			  // Open the file that is the first 
@@ -795,12 +803,12 @@ public class LDAPUtil
 		  {//Catch exception if any
 			  System.err.println("Error: " + e.getMessage());
 		   }
-		  System.out.println(" ############## END  LDAPUtil.getCountryIdByCode #####################");
+		  _log.info(" ############## END  LDAPUtil.getCountryIdByCode #####################");
 		  return 217;
 	  }
 	public static String getCountryCodeById(long cid)
 	 {
-		System.out.println(" ############## START  LDAPUtil.getCountryIdByCode #####################cid"+cid);
+		_log.info(" ############## START  LDAPUtil.getCountryIdByCode #####################cid"+cid);
 		  try
 		  {
 			  // Open the file that is the first 
@@ -826,20 +834,20 @@ public class LDAPUtil
 		  {//Catch exception if any
 			  System.err.println("Error: " + e.getMessage());
 		   }
-		  System.out.println(" ############## END  LDAPUtil.getCountryCodeById #####################");
+		  _log.info(" ############## END  LDAPUtil.getCountryCodeById #####################");
 		  return "ae";
 	  }
 	public static void updateUser(User user)
 	{
 		
-		System.out.println(" ############## START  LDAPUtil.updateUser ##################### " );		
+		_log.info(" ############## START  LDAPUtil.updateUser ##################### " );		
 		try 
 		{	
-			System.out.println(" user"+user.getPassword() +" unencrypt: "+user.getPasswordUnencrypted() );
+			_log.debug(" user"+user.getPassword() +" unencrypt: "+user.getPasswordUnencrypted() );
 			
 			 DirContext ctx = getLDAPContext(user);	
 			 
-			 System.out.println(" 1"+ user.getPassword());
+			 _log.info(" 1"+ user.getPassword());
 			 
 			 ModificationItem[]  mods= new ModificationItem[3];	
 			 Attribute mod0 = new BasicAttribute("sn");	
@@ -850,19 +858,19 @@ public class LDAPUtil
 			 mod1.add(user.getFirstName() );
 			 mod2.add(user.getJobTitle() );
 			 
-			 System.out.println(" 2");
+			 _log.info(" 2");
 			 mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod0);
 			 mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
 			 mods[2] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod2);
 			 
-			 System.out.println(" 3"+user.getScreenName() );
+			 _log.info(" 3"+user.getScreenName() );
 			 ctx.modifyAttributes("ldap://ldap-dev.globalepic.lu:389/uid="+user.getScreenName() +",ou=users,ou=people,dc=emergency,dc=lu", mods);
-			 System.out.println(" 4");
+			 _log.info(" 4");
 		
 			 
 		}
 		catch(Exception e){ e.printStackTrace(); }
-		System.out.println(" ############## END  LDAPUtil.updateUser ##################### " );		
+		_log.info(" ############## END  LDAPUtil.updateUser ##################### " );		
 		
 	}
 	public static String toInitCap(String param) {

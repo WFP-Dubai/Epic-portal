@@ -18,17 +18,18 @@ import lu.globalepic.util.LDAPUtil;
 import com.liferay.portal.ModelListenerException;
 import com.liferay.portal.model.Address;
 import com.liferay.portal.model.BaseModelListener;
-
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 /**
  * 
  * @author Mohammed Kaleem
  */
 public class MyAddressListener extends BaseModelListener<Address> 
 {
-	
+	private static Log _log = LogFactoryUtil.getLog(MyAddressListener.class);
 	 public void onBeforeCreate(Address address) throws ModelListenerException 
 	 {
-		 	System.out.println(" #####   MyAddressListener.onBeforeCreate : address"+ address );
+		 	_log.info(" #####   MyAddressListener.onBeforeCreate : address"+ address );
 		 	
 		 	LDAPUtil.importAddresses(address);
 		 	
@@ -44,7 +45,7 @@ public class MyAddressListener extends BaseModelListener<Address>
 	 }
 	 public void onBeforeUpdate(Address address) throws ModelListenerException 
 	 {
-		 	System.out.println(" #####   MyAddressListener.onBeforeUpdate : address"+ address );
+		 	_log.info(" #####   MyAddressListener.onBeforeUpdate : address"+ address );
 		 	
 		 	if( address.isNew() ) LDAPUtil.importAddresses(address);
 		 	
@@ -60,13 +61,13 @@ public class MyAddressListener extends BaseModelListener<Address>
 	 }
 	 public void onAfterUpdate(Address address) throws ModelListenerException 
 	 {
-		 	System.out.println(" #####   START MyAddressListener.onAfterUpdate : address"+ address );
+		 	_log.info(" #####   START MyAddressListener.onAfterUpdate : address"+ address );
 		 
 		 	LDAPUtil.exportAddress( address);
 		 	
 		 	//super.onAfterUpdate(address);
 		 	
-		 	System.out.println(" #####   END MyAddressListener.onAfterUpdate : address"+ address );
+		 	_log.info(" #####   END MyAddressListener.onAfterUpdate : address"+ address );
 			
 	 }
 
