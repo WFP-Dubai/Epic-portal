@@ -29,10 +29,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import javax.crypto.*;
+import sun.misc.*;
 
 /**
  * <a href="LiferayUsersMapDAO.java.html"><b><i>View Source</i></b></a>
@@ -45,16 +45,17 @@ public class LiferayUsersMapDAO {
 
 	
 	private static final String _UPDATE_PASSWORD = "update pink_elephant set plain=? where userid=?;";
+	private static final String _INSERT_PASSWORD = "insert into pink_elephant (plain,userid) values (?,?);";
 	private static final String _GET_PASSWORD_BY_ID ="select plain from pink_elephant where userid=?;"; 
 	private static final String _UPDATE_ORIGINAL_PASSWORD ="update user_ set password_= ? where userid=?;";
 	private static String algorithm = "DESede";
 	private static String DB_NAME = "liferay-dev";
 	private static String DB_USER_NAME = "kmohammed";
-	private static String DB_PWD = "F2JcodZyf29KQNnJNa3T";//"welcome";//;
-	private static String connectionURL = "jdbc:postgresql://localhost:5432/liferay-dev";
-
-	
-
+	private static String DB_PWD = "F2JcodZyf29KQNnJNa3T";//;"F2JcodZyf29KQNnJNa3T";//"welcome";//;
+	private static String connectionURL = "jdbc:postgresql://localhost:5432/liferay-dev";	
+	private static final String ALGO = "AES";
+	private static final byte[] keyValue =  new byte[] { 'T', 'h', 'e', 'e', 'P', 'I', 'C',
+	    													'S', 'e', 'c', 'r','e', 't', 'K', 'e', 'y' };
 	public static boolean storePassword( long userId, String pwd )
 	{
 		System.out.println(" ################################################");
@@ -78,32 +79,35 @@ public class LiferayUsersMapDAO {
 			
 			ps = con.prepareStatement(_UPDATE_PASSWORD);
 			System.out.println(" #ps"+ps);
-			
-			// Key key = KeyGenerator.getInstance(algorithm).generateKey();
-			// Cipher  cipher = Cipher.getInstance(algorithm);
 			 
-		    //  byte[] encryptionBytes = encrypt(pwd.trim(),key, cipher);
-		    //  String encryptedPwd = new String(encryptionBytes,"UTF-8");
+			String encryptionBytes = encrypt(pwd.trim());
+			pwd = new String(encryptionBytes);
 		      
 		      
-			ps.setString(1, pwd.trim() );
+			ps.setString(1, pwd  );
 			System.out.println(" kkkkk");
 			ps.setLong(2, userId  );
 
 			System.out.println(" lllllps:"+ps);
-			int res =ps.executeUpdate();
-
-			System.out.println(" mmmmm");
-			
-			System.out.println("���������  res : "+res);
-			
-			if( res >= 0 )
+			int res =ps.executeUpdate();			
+			if( res > 0 )
 			{
-				ps.close();
-				con.close();
-				isStored= true;
+				System.out.println(" updated "+res);
 			}
-			
+			else
+			{
+				ps = con.prepareStatement(_INSERT_PASSWORD);
+				System.out.println(" #ps"+ps);
+				ps.setString(1, pwd.trim() );
+				System.out.println(" kkkkk");
+				ps.setLong(2, userId  );
+				 res =ps.executeUpdate();
+				 System.out.println(" inserted "+res);
+				
+			}
+			ps.close();
+			con.close();
+			isStored= true;
 			
 		}catch(Exception e)
 		{
@@ -144,11 +148,10 @@ public class LiferayUsersMapDAO {
 			while (rs.next()) 
 			{				
 				 encryptionBytesFromDB = rs.getString(1);
-				System.out.println(" encryptionBytesFromDB "+encryptionBytesFromDB);
+				//System.out.println(" encryptionBytesFromDB "+encryptionBytesFromDB);
 				
-			//	Key  key = KeyGenerator.getInstance(algorithm).generateKey();
-				//Cipher  cipher = Cipher.getInstance(algorithm);
-			//	String pwd = decrypt(encryptionBytesFromDB.getBytes(), key, cipher);
+			
+				encryptionBytesFromDB = decrypt(encryptionBytesFromDB);
 				//System.out.println("���������  res  pwd : "+pwd );
 				//ps.close();
 				//con.close();
@@ -225,28 +228,28 @@ public class LiferayUsersMapDAO {
 		return isUpdated;
 		
 	}
-	 private static byte[] encrypt(String pwd,Key key, Cipher cipher) throws InvalidKeyException, BadPaddingException,
-     IllegalBlockSizeException
-     {
-		 System.out.println(" ########## START LiferayUsersMapDAO encrypt ################pwd"+pwd);
-		 cipher.init(Cipher.ENCRYPT_MODE, key);
-		 byte[] inputBytes = pwd.getBytes();
-		 System.out.println(" ############### END LiferayUsersMapDAO encrypt ##########pwd encrypted"+inputBytes);
-		 
-		 return cipher.doFinal(inputBytes);
-     }
-	 private static String decrypt(byte[] encryptionBytes, Key key, Cipher cipherr) throws InvalidKeyException,
-     BadPaddingException, IllegalBlockSizeException 
-     {
-		 System.out.println(" ########## START LiferayUsersMapDAO decrypt ################encryptionBytes:"+encryptionBytes);
-		 cipherr.init(Cipher.DECRYPT_MODE, key);
-		 byte[] recoveredBytes = cipherr.doFinal(encryptionBytes);
-		 System.out.println(" recoveredBytes "+recoveredBytes );
-		 String recovered = new String(recoveredBytes);
-		 System.out.println(" ########## START LiferayUsersMapDAO decrypt ################recovered"+recovered);
-		 
-		 return recovered;
-      }
+	public static String encrypt(String Data) throws Exception {
+        Key key = generateKey();
+        Cipher c = Cipher.getInstance(ALGO);
+        c.init(Cipher.ENCRYPT_MODE, key);
+        byte[] encVal = c.doFinal(Data.getBytes());
+        String encryptedValue = new BASE64Encoder().encode(encVal);
+        return encryptedValue;
+    }
+
+    public static String decrypt(String encryptedData) throws Exception {
+        Key key = generateKey();
+        Cipher c = Cipher.getInstance(ALGO);
+        c.init(Cipher.DECRYPT_MODE, key);
+        byte[] decordedValue = new BASE64Decoder().decodeBuffer(encryptedData);
+        byte[] decValue = c.doFinal(decordedValue);
+        String decryptedValue = new String(decValue);
+        return decryptedValue;
+    }
+    private static Key generateKey() throws Exception {
+        Key key = new javax.crypto.spec.SecretKeySpec(keyValue, ALGO);
+        return key;
+}
 	
 
 }
