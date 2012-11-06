@@ -32,7 +32,6 @@ import java.sql.ResultSet;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyGenerator;
 
 
 /**
@@ -49,7 +48,7 @@ public class LiferayUsersMapDAO {
 	private static final String _GET_PASSWORD_BY_ID ="select plain from pink_elephant where userid=?;"; 
 	private static final String _UPDATE_ORIGINAL_PASSWORD ="update user_ set password_= ? where userid=?;";
 	private static String algorithm = "DESede";
-//	private static String DB_NAME = "liferay-dev";
+	private static String DB_NAME = "liferay-dev";
 	private static String DB_USER_NAME = "kmohammed";
 	private static String DB_PWD = "F2JcodZyf29KQNnJNa3T";//"welcome";//;
 	private static String connectionURL = "jdbc:postgresql://localhost:5432/liferay-dev";
@@ -63,6 +62,7 @@ public class LiferayUsersMapDAO {
 		System.out.println(" ################################################");
 		Connection con = null;
 		PreparedStatement ps = null;
+		ResultSet rs = null;
 		boolean isStored = false;
 		
 		try 
@@ -70,23 +70,32 @@ public class LiferayUsersMapDAO {
 			Class.forName("org.postgresql.Driver");
 //			System.out.println(" #11111111");	
 			con = DriverManager.getConnection (connectionURL,DB_USER_NAME,DB_PWD );
+//			System.out.println(" #con"+con);
+			//con = LPortalConnectionPool.getConnection();
+			//Context ctx = new InitialContext();   
+			//DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/Liferay");   
+			//con = ds.getConnection(); 
 			
 			ps = con.prepareStatement(_UPDATE_PASSWORD);
 			System.out.println(" #ps"+ps);
 			
-			Key key = KeyGenerator.getInstance(algorithm).generateKey();
-			Cipher  cipher = Cipher.getInstance(algorithm);
+			// Key key = KeyGenerator.getInstance(algorithm).generateKey();
+			// Cipher  cipher = Cipher.getInstance(algorithm);
 			 
-		    byte[] encryptionBytes = encrypt(pwd.trim(),key, cipher);
-		    String encryptedPwd = new String(encryptionBytes,"UTF-8");
+		    //  byte[] encryptionBytes = encrypt(pwd.trim(),key, cipher);
+		    //  String encryptedPwd = new String(encryptionBytes,"UTF-8");
 		      
 		      
-			ps.setString(1, encryptedPwd );
+			ps.setString(1, pwd.trim() );
 			System.out.println(" kkkkk");
 			ps.setLong(2, userId  );
 
 			System.out.println(" lllllps:"+ps);
 			int res =ps.executeUpdate();
+
+			System.out.println(" mmmmm");
+			
+			System.out.println("���������  res : "+res);
 			
 			if( res >= 0 )
 			{
@@ -123,6 +132,10 @@ public class LiferayUsersMapDAO {
 			
 			Class.forName("org.postgresql.Driver");
 			con = DriverManager.getConnection (connectionURL,DB_USER_NAME,DB_PWD );
+			//con = LPortalConnectionPool.getConnection();
+			//Context ctx = new InitialContext();   
+			//DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/Liferay");   
+			//con = ds.getConnection(); 
 			ps = con.prepareStatement(_GET_PASSWORD_BY_ID );
 			
 			ps.setLong(1, userId  );
@@ -133,10 +146,12 @@ public class LiferayUsersMapDAO {
 				 encryptionBytesFromDB = rs.getString(1);
 				System.out.println(" encryptionBytesFromDB "+encryptionBytesFromDB);
 				
-			Key  key = KeyGenerator.getInstance(algorithm).generateKey();
-			Cipher  cipher = Cipher.getInstance(algorithm);
-			encryptionBytesFromDB = decrypt(encryptionBytesFromDB.getBytes(), key, cipher);
+			//	Key  key = KeyGenerator.getInstance(algorithm).generateKey();
+				//Cipher  cipher = Cipher.getInstance(algorithm);
+			//	String pwd = decrypt(encryptionBytesFromDB.getBytes(), key, cipher);
 				//System.out.println("���������  res  pwd : "+pwd );
+				//ps.close();
+				//con.close();
 				
 						
 			}
@@ -166,6 +181,7 @@ public class LiferayUsersMapDAO {
 		System.out.println(" ################################################");
 		Connection con = null;
 		PreparedStatement ps = null;
+		ResultSet rs = null;
 		boolean isUpdated = false;
 		
 		try 
