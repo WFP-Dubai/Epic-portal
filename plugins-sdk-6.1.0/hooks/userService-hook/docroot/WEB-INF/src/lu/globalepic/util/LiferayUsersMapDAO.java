@@ -33,7 +33,8 @@ import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 import javax.crypto.*;
 import sun.misc.*;
-
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 /**
  * <a href="LiferayUsersMapDAO.java.html"><b><i>View Source</i></b></a>
  *
@@ -58,9 +59,9 @@ public class LiferayUsersMapDAO {
 	    													'S', 'e', 'c', 'r','e', 't', 'K', 'e', 'y' };
 	public static boolean storePassword( long userId, String pwd )
 	{
-		System.out.println(" ################################################");
-		System.out.println(" START LiferayUsersMapDAO.storePassword ######## pwd : "+pwd);
-		System.out.println(" ################################################");
+		_log.info(" ######## START LiferayUsersMapDAO.storePassword##################");
+		_log.debug(" ######## pwd : "+pwd);
+		_log.info(" ################################################");
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -69,40 +70,40 @@ public class LiferayUsersMapDAO {
 		try 
 		{
 			Class.forName("org.postgresql.Driver");
-//			System.out.println(" #11111111");	
+//			_log.info(" #11111111");	
 			con = DriverManager.getConnection (connectionURL,DB_USER_NAME,DB_PWD );
-//			System.out.println(" #con"+con);
+//			_log.info(" #con"+con);
 			//con = LPortalConnectionPool.getConnection();
 			//Context ctx = new InitialContext();   
 			//DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/Liferay");   
 			//con = ds.getConnection(); 
 			
 			ps = con.prepareStatement(_UPDATE_PASSWORD);
-			System.out.println(" #ps"+ps);
+			_log.info(" #ps"+ps);
 			 
 			String encryptionBytes = encrypt(pwd.trim());
 			pwd = new String(encryptionBytes);
 		      
 		      
 			ps.setString(1, pwd  );
-			System.out.println(" kkkkk");
+			_log.info(" kkkkk");
 			ps.setLong(2, userId  );
 
-			System.out.println(" lllllps:"+ps);
+			_log.info(" lllllps:"+ps);
 			int res =ps.executeUpdate();			
 			if( res > 0 )
 			{
-				System.out.println(" updated "+res);
+				_log.info(" updated "+res);
 			}
 			else
 			{
 				ps = con.prepareStatement(_INSERT_PASSWORD);
-				System.out.println(" #ps"+ps);
+				_log.info(" #ps"+ps);
 				ps.setString(1, pwd.trim() );
-				System.out.println(" kkkkk");
+				_log.info(" kkkkk");
 				ps.setLong(2, userId  );
 				 res =ps.executeUpdate();
-				 System.out.println(" inserted "+res);
+				 _log.info(" inserted "+res);
 				
 			}
 			ps.close();
@@ -114,18 +115,18 @@ public class LiferayUsersMapDAO {
 			e.printStackTrace();
 		}
 		//finally {LPortalConnectionPool.cleanUp(con, ps, rs);}
-		System.out.println(" ################################################");
-		System.out.println(" END LiferayUsersMapDAO.storePassword ######## UserID : "+userId);
-		System.out.println(" ################################################");
+		_log.info(" ################################################");
+		_log.info(" END LiferayUsersMapDAO.storePassword ######## UserID : "+userId);
+		_log.info(" ################################################");
 		
 		return isStored;
 		
 	}
 	public static String getPlainPassword( long userId )
 	{
-		System.out.println(" ################################################");
-		System.out.println(" START LiferayUsersMapDAO.getPlainPassword ######## UserID : "+userId);
-		System.out.println(" ################################################");
+		_log.info(" ################################################");
+		_log.info(" START LiferayUsersMapDAO.getPlainPassword ######## UserID : "+userId);
+		_log.info(" ################################################");
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -148,18 +149,18 @@ public class LiferayUsersMapDAO {
 			while (rs.next()) 
 			{				
 				 encryptionBytesFromDB = rs.getString(1);
-				//System.out.println(" encryptionBytesFromDB "+encryptionBytesFromDB);
+				//_log.info(" encryptionBytesFromDB "+encryptionBytesFromDB);
 				
 			
 				encryptionBytesFromDB = decrypt(encryptionBytesFromDB);
-				//System.out.println("���������  res  pwd : "+pwd );
+				//_log.info("���������  res  pwd : "+pwd );
 				//ps.close();
 				//con.close();
 				
 						
 			}
 			
-			System.out.println("���������  res : "+rs);
+			_log.info("���������  res : "+rs);
 
 			ps.close();
 			con.close();
@@ -170,18 +171,18 @@ public class LiferayUsersMapDAO {
 			e.printStackTrace();
 		}
 		//finally {LPortalConnectionPool.cleanUp(con, ps, rs);}
-		System.out.println(" ################################################");
-		System.out.println(" END LiferayUsersMapDAO.getPlainPassword ######## UserID : "+userId);
-		System.out.println(" ################################################");
+		_log.info(" ################################################");
+		_log.info(" END LiferayUsersMapDAO.getPlainPassword ######## UserID : "+userId);
+		_log.info(" ################################################");
 		
 		return encryptionBytesFromDB;
 		
 	}
 	public static boolean updateOriginalPassword( long userId, String pwd )
 	{
-		System.out.println(" ################################################");
-		System.out.println(" START LiferayUsersMapDAO.updateOriginalPassword ######## UserID : "+userId);
-		System.out.println(" ################################################");
+		_log.info(" ################################################");
+		_log.info(" START LiferayUsersMapDAO.updateOriginalPassword ######## UserID : "+userId);
+		_log.info(" ################################################");
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -205,7 +206,7 @@ public class LiferayUsersMapDAO {
 			ps.setLong(2, userId  );
 			int res =ps.executeUpdate();
 			
-			System.out.println("���������  res : "+res);
+			_log.info("���������  res : "+res);
 			
 			if( res >= 0 )
 			{
@@ -221,9 +222,9 @@ public class LiferayUsersMapDAO {
 			e.printStackTrace();
 		}
 		//finally {LPortalConnectionPool.cleanUp(con, ps, rs);}
-		System.out.println(" ################################################");
-		System.out.println(" END LiferayUsersMapDAO.updateOriginalPassword ######## UserID : "+userId);
-		System.out.println(" ################################################");
+		_log.info(" ################################################");
+		_log.info(" END LiferayUsersMapDAO.updateOriginalPassword ######## UserID : "+userId);
+		_log.info(" ################################################");
 		
 		return isUpdated;
 		
@@ -251,5 +252,5 @@ public class LiferayUsersMapDAO {
         return key;
 }
 	
-
+    private static Log _log = LogFactoryUtil.getLog(LiferayUsersMapDAO.class);
 }

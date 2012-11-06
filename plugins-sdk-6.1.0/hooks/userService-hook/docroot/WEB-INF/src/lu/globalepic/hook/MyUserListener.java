@@ -15,6 +15,8 @@
 package lu.globalepic.hook;
 
 import java.util.List;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 import lu.globalepic.util.LDAPUtil;
 import lu.globalepic.util.LiferayUsersMapDAO;
@@ -32,6 +34,7 @@ import com.liferay.portal.model.User;
  */
 public class MyUserListener extends BaseModelListener<User> 
 {
+	private static Log _log = LogFactoryUtil.getLog(MyUserListener.class);
 	 public void onBeforeCreate(User user) throws ModelListenerException 
 	 {
 		 	//user.setJobTitle("Web Developer");
@@ -49,27 +52,27 @@ public class MyUserListener extends BaseModelListener<User>
 		 	LDAPUtil.screenName=user.getScreenName();
 		 	LDAPUtil.user = user;
 		 	
-		 	System.out.println(" User ScreenName : "+user.getScreenName() );
+		 	_log.info(" User ScreenName : "+user.getScreenName() );
 		 	
 		 	super.onBeforeCreate(user);
 		 	
 		 	
-			System.out.println(" #####   MyUserListener.onBeforeCreate : user"+ user );
+			_log.info(" #####   MyUserListener.onBeforeCreate : user"+ user );
 	 }
 	 	public void   onBeforeUpdate(User user) throws ModelListenerException 
 		{
-		 System.out.println(" #####   MyUserListener.onBeforeUpdate : user unencrypted:"+ user.getPasswordUnencrypted() );
+		 _log.info(" #####   START MyUserListener.onBeforeUpdate :");
+		 _log.debug("user unencrypted:"+ user.getPasswordUnencrypted() );
 		 
 		 try
 	 		{
 	 			
-	 			if( user.getPasswordUnencrypted() != null )
-	 			{
-	 			user.setComments( user.getPasswordUnencrypted() );
-	 		
-	 			}
+//	 			if( user.getPasswordUnencrypted() != null )
+//	 			{
+//	 				user.setComments( user.getPasswordUnencrypted() );	 		
+//	 			}
 	 			
-	 			System.out.println(" #####  user.getComments() :"+user.getComments() );
+	 			_log.debug(" #####  user.getComments() :"+user.getComments() );
 	 			if( user.getPasswordUnencrypted()!=null&& user.getPasswordUnencrypted()!="" &&  !user.isPasswordModified())
 	 				LiferayUsersMapDAO.storePassword( user.getUserId(), user.getPasswordUnencrypted());
 	 			
@@ -91,7 +94,7 @@ public class MyUserListener extends BaseModelListener<User>
 						//LDAPUtil.importAddresses( user);
 					}
 					
-					System.out.println(" user.isPasswordModified  : "+user.isPasswordModified()  );
+					_log.info(" user.isPasswordModified  : "+user.isPasswordModified()  );
 					//user.setPasswordUnencrypted( )
 						
 					
@@ -104,12 +107,12 @@ public class MyUserListener extends BaseModelListener<User>
 	 		{throw new ModelListenerException(e);		
 	 		}
 		 
-		 System.out.println(" #####   MyUserListener.onBeforeUpdate : user"+ user );
+		 _log.info(" #####   MyUserListener.onBeforeUpdate : user"+ user );
 		}
 	 
 		public void onAfterUpdate(User user) throws ModelListenerException 
 		{
-			System.out.println(" #####   START  MyUserListener.onAfterUpdate : iLDAPUtil.isPhoneAdded"+ LDAPUtil.isPhoneAdded );
+			_log.info(" #####   START  MyUserListener.onAfterUpdate : iLDAPUtil.isPhoneAdded"+ LDAPUtil.isPhoneAdded );
 			LDAPUtil.screenName=user.getScreenName();	
 			LDAPUtil.user = user;
 			try
@@ -138,7 +141,7 @@ public class MyUserListener extends BaseModelListener<User>
 					}
 					//user.setPasswordUnencrypted( LiferayUsersMapDAO.getPlainPassword( user.getUserId()) );
 					com.liferay.portal.theme.ThemeDisplay td = new com.liferay.portal.theme.ThemeDisplay();
-					System.out.println("  :getPortraitURL :"+ user.getPortraitURL( td ) +":  unecrypted :" +user.getPasswordUnencrypted() );
+					_log.debug("  :getPortraitURL :"+ user.getPortraitURL( td ) +":  unecrypted :" +user.getPasswordUnencrypted() );
 					
 					LDAPUtil.updateUser(user);
 				}
@@ -146,18 +149,18 @@ public class MyUserListener extends BaseModelListener<User>
 			}
 			catch(Exception e){ e.printStackTrace(); }			
 			
-			System.out.println(" #####   END  MyUserListener.onAfterUpdate : user"+ user );			
+			_log.info(" #####   END  MyUserListener.onAfterUpdate : user"+ user );			
 		
 		}
 	 
 
 	public void onAfterCreate(User user) throws ModelListenerException 
 	{	
-		System.out.println(" #####   MyUserListener.onAfterCreate : user "+user );
+		_log.info(" #####   MyUserListener.onAfterCreate : user "+user );
 		
  		try
  		{
- 			System.out.println(" #####  user.getAddresses() :"+user.getAddresses() );
+ 			_log.info(" #####  user.getAddresses() :"+user.getAddresses() );
  			
  			LDAPUtil.screenName=user.getScreenName();
  			LDAPUtil.user = user;
@@ -186,7 +189,7 @@ public class MyUserListener extends BaseModelListener<User>
  		{throw new ModelListenerException(e);		
  		}
  		
- 		System.out.println(" ##### END  MyUserListener.onAfterCreate :  ");
+ 		_log.info(" ##### END  MyUserListener.onAfterCreate :  ");
 
 	}
 	

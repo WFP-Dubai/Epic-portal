@@ -14,6 +14,8 @@
 
 package lu.globalepic.hook;
 import lu.globalepic.util.LDAPUserInfo;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import lu.globalepic.util.LDAPUtil;
 
 import com.liferay.portal.ModelListenerException;
@@ -28,13 +30,14 @@ import com.liferay.portal.service.ListTypeServiceUtil;
  */
 public class MyContactListener extends BaseModelListener<Contact> 
 {
+	private static Log _log = LogFactoryUtil.getLog(MyContactListener.class);
 	public static boolean flag=true;
 	
 	 public void onBeforeCreate(Contact contact) throws ModelListenerException 
 	 {
-		 	System.out.println(" #####   START MyContactListener.onBeforeCreate : contact"+ contact );
+		 	_log.info(" #####   START MyContactListener.onBeforeCreate : contact"+ contact );
 		 	LDAPUserInfo ldapUser = LDAPUtil.getLDAPUserInfoByContact(contact);
-		 	System.out.println( " ldapUser "+ ldapUser );
+		 	_log.info( " ldapUser "+ ldapUser );
 		 	contact.setFacebookSn(ldapUser.facebook);
 			contact.setYmSn(ldapUser.ym);
 			contact.setSkypeSn(ldapUser.skype);
@@ -46,11 +49,11 @@ public class MyContactListener extends BaseModelListener<Contact>
 			contact.setJabberSn(ldapUser.vhf);		
 			
 		 	super.onBeforeCreate(contact);
-			System.out.println("##### END  MyContactListener.onBeforeCreate : contact"+ contact );
+			_log.info("##### END  MyContactListener.onBeforeCreate : contact"+ contact );
 	 }
 	 public void onAfterCreate(Contact contact) throws ModelListenerException 
 	 {
-		 System.out.println(" #####  start MyContactListener.onAfterCreate : contact"+ contact );
+		 _log.info(" #####  start MyContactListener.onAfterCreate : contact"+ contact );
 		 
 		 	if( (contact.getJabberSn()==null||contact.getJabberSn()!="") &&
 		 			(contact.getMsnSn()!=null||contact.getMsnSn()!="") && 
@@ -62,7 +65,7 @@ public class MyContactListener extends BaseModelListener<Contact>
 		 	{
 		 		
 		 	LDAPUserInfo ldapUser = LDAPUtil.getLDAPUserInfoByContact( contact);
-		 	System.out.println( " ldapUser "+ ldapUser );
+		 	_log.info( " ldapUser "+ ldapUser );
 		 	contact.setFacebookSn(ldapUser.facebook);
 			contact.setYmSn(ldapUser.ym);
 			contact.setSkypeSn(ldapUser.skype);
@@ -76,34 +79,34 @@ public class MyContactListener extends BaseModelListener<Contact>
 		
 			
 		 	}
-		 	System.out.println(" ##### end  MyContactListener.onAfterCreate : contact"+ contact );
+		 	_log.info(" ##### end  MyContactListener.onAfterCreate : contact"+ contact );
 		 
 		
 	 }
 	 public void   onBeforeUpdate(Contact contact) throws ModelListenerException 
 		{
 			
-				System.out.println(" #####  KALEEM START MyContactListener.onBeforeUpdate : Contact"+ contact );
+				_log.info(" #####  KALEEM START MyContactListener.onBeforeUpdate : Contact"+ contact );
 				if(  contact.getAimSn()=="" || contact.getAimSn()==null )LDAPUtil.beforeUpdateContact(contact );
 				//LDAPUtil.updateContact(contact,true );
 				super.onBeforeUpdate(contact);
-				System.out.println(" #####   END MyContactListener.onBeforeUpdate : Contact"+ contact );
+				_log.info(" #####   END MyContactListener.onBeforeUpdate : Contact"+ contact );
 		}
 	 public void   onAfterUpdate(Contact contact) throws ModelListenerException 
 	{
 		
-			System.out.println(" #####   START MyContactListener.onAfterUpdate : contact.getPrefixId("+ contact.getPrefixId() );
+			_log.info(" #####   START MyContactListener.onAfterUpdate : contact.getPrefixId("+ contact.getPrefixId() );
 			try{
 				int prefix = contact.getPrefixId();
 				if( prefix>0 ){
 			String prefixName =ListTypeServiceUtil.getListType(contact.getPrefixId()).getName();
 			
-			System.out.println(" ##### prefix"+ prefix+ "prefixName "+ prefixName );
+			_log.info(" ##### prefix"+ prefix+ "prefixName "+ prefixName );
 				}
 				LDAPUtil.updateContact(contact,false );
 			}catch(Exception e){ e.printStackTrace(); }
 			
-			System.out.println(" #####   END MyContactListener.onAfterUpdate : ");
+			_log.info(" #####   END MyContactListener.onAfterUpdate : ");
 	}
 
 	
