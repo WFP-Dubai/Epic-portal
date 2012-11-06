@@ -9,6 +9,13 @@ package lu.globalepic.util;
  */
 
 
+import java.util.Hashtable;
+import java.util.Enumeration;
+import java.util.List;
+
+import java.util.ArrayList;
+import javax.naming.*;
+import javax.naming.directory.*;
 /*
 * Retrieve several attributes of a particular entry.
 *
@@ -16,30 +23,30 @@ package lu.globalepic.util;
 */
 public class LDAPUserInfo {
 	
-	public String gtalk;
-	public String ym;
-	public String msn;
-	public String skype;
-	public String sip;
-	public String vhf;
+	public static String gtalk;
+	public static String ym;
+	public static String msn;
+	public static String skype;
+	public static String sip;
+	public static String vhf;
 	
 	
-	public String mySpace;
-	public String facebook;
-	public String twitter;
+	public static String mySpace;
+	public static String facebook;
+	public static String twitter;
 	
-	public String organization;
+	public static String organization;
 
-	public String street;
-	public String postalCode;
-	public String city;
-	public String country;
+	public static String street;
+	public static String postalCode;
+	public static String city;
+	public static String country;
 	
-	public String mobile;
-	public String surName;
-	public String givenName;
+	public static String mobile;
+	public static String surName;
+	public static String givenName;
 	
-	public String personalTitle;
+	public static String personalTitle;
 	
 	
 
