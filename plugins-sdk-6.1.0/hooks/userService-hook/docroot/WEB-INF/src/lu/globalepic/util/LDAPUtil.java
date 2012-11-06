@@ -98,6 +98,7 @@ public class LDAPUtil
 
 	}
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static DirContext  getLDAPContext(User user)
 	{
 		System.out.println(" ############## START  LDAPUtil.getLDAPContext #####################"+user.getScreenName()+"getPasswordUnecrypted "+user.getPasswordUnencrypted() );
@@ -199,7 +200,7 @@ public class LDAPUtil
 		ctls.setSearchScope(SearchControls.SUBTREE_SCOPE);
 		System.out.println(" 1");
 		// Search for objects using filter and controls
-		NamingEnumeration answer = ctx.search(
+		NamingEnumeration<SearchResult> answer = ctx.search(
 				"ldap://ldap-dev.globalepic.lu:389/uid=" + screenName
 						+ ",ou=users,ou=people,dc=emergency,dc=lu", FILTER,
 				ctls);
@@ -284,7 +285,7 @@ public class LDAPUtil
 			if(attrs.get(attributeName)!=null )
 			{
 				commuriList = new ArrayList<String>();					
-				NamingEnumeration nString = attrs.get(attributeName).getAll();			
+				NamingEnumeration<?> nString = attrs.get(attributeName).getAll();			
 				while (nString.hasMore()) 
 				{
 					commuriList.add(attrs.get(attributeName).get(i).toString());
@@ -432,14 +433,11 @@ public class LDAPUtil
 			 
 			
 			 System.out.println(" 1  isPwdModified");
-			 boolean isPwdModified = LiferayUsersMapDAO.storePassword( user.getUserId(),user.getPasswordUnencrypted() );
-			 System.out.println(" 22222222  ");
+//			 boolean isPwdModified = LiferayUsersMapDAO.storePassword( user.getUserId(),user.getPasswordUnencrypted() );
 //			 LiferayUsersMapDAO.updateOriginalPassword( user.getUserId(),user.getPassword() );
 			 user.setPasswordUnencrypted(null);
-			 System.out.println(" eeerere  ");
 			 user.setPasswordModified(false);
-			 System.out.println(" 222bbvbvbv22222  ");
-//			 FIXME: not working local save???? 
+
 			 UserLocalServiceUtil.updatePasswordManually(user.getUserId(),
 						user.getPassword(),
 						true,
@@ -480,11 +478,11 @@ public class LDAPUtil
 			 //getIcqSn -> gtalk, sip/lync ->aim 
 			 Attribute mod0 = new BasicAttribute("communicationUri");		
 			 Attribute mod1 = new BasicAttribute("personalTitle");		
-			 String skype = contact.getSkypeSn();
-			 String sip = contact.getAimSn();
-			 String gtalk = contact.getIcqSn();
-			 String msn = contact.getMsnSn();
-			 String vhf = contact.getJabberSn();
+//			 String skype = contact.getSkypeSn();
+//			 String sip = contact.getAimSn();
+//			 String gtalk = contact.getIcqSn();
+//			 String msn = contact.getMsnSn();
+//			 String vhf = contact.getJabberSn();
 			 
 			 /*mod0.add(contact.getJabberSn());	
 			 mod0.add(contact.getIcqSn());
