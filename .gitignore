@@ -7,8 +7,7 @@
 MANIFEST.MF
 .settings
 
-plugins-sdk-6.1.0/hooks/userService-hook/docroot/WEB-INF/classes
-plugins-sdk-6.1.0/hooks/userService-hook/docroot/WEB-INF/web.xml
-plugins-sdk-6.1.0/hooks/userService-hook/.project
+classes
+.project
 plugins-sdk-6.1.0/hooks/userService-hook/.classpath
 .DS_Store
