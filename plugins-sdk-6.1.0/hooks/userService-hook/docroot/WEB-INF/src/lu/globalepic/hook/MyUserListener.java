@@ -141,7 +141,7 @@ public class MyUserListener extends BaseModelListener<User>
 					}
 					//user.setPasswordUnencrypted( LiferayUsersMapDAO.getPlainPassword( user.getUserId()) );
 					com.liferay.portal.theme.ThemeDisplay td = new com.liferay.portal.theme.ThemeDisplay();
-					_log.debug("  :getPortraitURL :"+ user.getPortraitURL( td ) +":  unecrypted :" +user.getPasswordUnencrypted() );
+					_log.info("  :getPortraitURL :"+ user.getPortraitURL( td )  );
 					
 					LDAPUtil.updateUser(user);
 				}

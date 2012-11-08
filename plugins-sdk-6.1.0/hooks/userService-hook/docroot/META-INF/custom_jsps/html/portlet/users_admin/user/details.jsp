@@ -66,11 +66,11 @@ boolean deletePortrait = ParamUtil.getBoolean(request, "deletePortrait");
 				<aui:field-wrapper name="screenName" >
 					<%= selUser.getScreenName() %>
 
-					<aui-cc:input name="screenName" type="hidden"   value="<%= selUser.getScreenName() %>" />
+					<aui:input name="screenName" disabled="true"   value="<%= selUser.getScreenName() %>" />
 				</aui:field-wrapper>
 			</c:when>
 			<c:otherwise>
-				<aui-cc:input name="screenName" readonly="true"  />
+				<aui:input name="screenName" disabled="true" />
 			</c:otherwise>
 		</c:choose>
 	</c:if>
@@ -84,7 +84,7 @@ boolean deletePortrait = ParamUtil.getBoolean(request, "deletePortrait");
 			<aui:field-wrapper name="emailAddress">
 				<%= selUser.getDisplayEmailAddress() %>
 
-				<aui:input name="emailAddress" type="hidden" readonly="readonly" value="<%= selUser.getEmailAddress()  %>" />
+				<aui:input name="emailAddress" disabled="true" value="<%= selUser.getEmailAddress()  %>" />
 			</aui:field-wrapper>
 		</c:when>
 		<c:otherwise>
@@ -99,7 +99,7 @@ boolean deletePortrait = ParamUtil.getBoolean(request, "deletePortrait");
 			}
 			%>
 <!-- for readonly here -->
-			<aui:input bean="<%= displayEmailAddressUser %>" model="<%= User.class %>" name="emailAddress" >
+			<aui:input disabled="true" bean="<%= displayEmailAddressUser %>" model="<%= User.class %>" name="emailAddress" >
 				<c:if test="<%= PrefsPropsUtil.getBoolean(company.getCompanyId(), PropsKeys.USERS_EMAIL_ADDRESS_REQUIRED) %>">
 					<aui:validator name="required" />
 				</c:if>
