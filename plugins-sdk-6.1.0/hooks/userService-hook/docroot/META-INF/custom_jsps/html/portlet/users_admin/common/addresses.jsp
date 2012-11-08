@@ -94,7 +94,7 @@ else {
 				<aui:column columnWidth="50">
 					<aui:input name='<%= "addressId" + addressesIndex %>' type="hidden" value="<%= address.getAddressId() %>" />
 
-					<aui:input fieldParam='<%= "addressStreet1_" + addressesIndex %>' name="street1" />
+					<aui:input label="street" fieldParam='<%= "addressStreet1_" + addressesIndex %>' name="street1" />
 
 					<aui-cc:input fieldParam='<%= "addressStreet2_" + addressesIndex %>' name="street2" />
 

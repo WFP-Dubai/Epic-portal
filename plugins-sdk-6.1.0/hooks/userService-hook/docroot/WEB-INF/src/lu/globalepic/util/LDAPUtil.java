@@ -36,6 +36,7 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.service.ListTypeServiceUtil;
 import com.liferay.portal.service.PhoneLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.service.ImageLocalServiceUtil;
 /*
 
  * Retrieve several attributes of a particular entry.
@@ -130,6 +131,7 @@ public class LDAPUtil
 				"com.sun.jndi.ldap.LdapCtxFactory");
 		env.put(Context.PROVIDER_URL,
 				"ldap://ldap-dev.globalepic.lu:389/dc=emergency,dc=lu");
+		 env.put("java.naming.ldap.attributes.binary", "jpegPhoto");
 
 		// env.put(Context.INITIAL_CONTEXT_FACTORY, Env.INITCTX);
 		/* Specify host and port to use for directory service */
@@ -390,9 +392,9 @@ public class LDAPUtil
 					String temp = commuriList.get(j);	
 					if (temp.indexOf("gtalk") != -1){ temp = temp.replace("gtalk:chat?jid=","");contact.setIcqSn( temp ); }
 					else if (temp.indexOf("msnim") != -1){ temp = temp.replace("msnim:chat?contact=",""); contact.setMsnSn( temp );	}
-					else if (temp.indexOf("skype") != -1) { temp = temp.replace("skype:","");contact.setSkypeSn( temp );}
+					else if (temp.indexOf("skype") != -1) { System.out.println("temp skype :"+temp );temp = temp.replace("skype:","");contact.setSkypeSn( temp );}
 					else if (temp.indexOf("sip") != -1 ){ temp = temp.replace("sip:",""); contact.setAimSn( temp );}
-					else if (temp.indexOf("VHF") != -1  ){ temp = temp.replace("VHFcallsign:",""); contact.setJabberSn( temp );	}	
+					else if (temp.indexOf("VHF") != -1  ){ System.out.println("temp vhf :"+temp );temp = temp.replace("VHFcallsign:",""); contact.setJabberSn( temp );	}	
 					else if (temp.indexOf("http") != -1 && temp.indexOf("facebook")!=-1 ){ temp = temp.replace("http:",""); contact.setFacebookSn( temp );	}	
 					else if (temp.indexOf("http") != -1 && temp.indexOf("linkedin")!=-1 ){ temp = temp.replace("http:",""); contact.setMySpaceSn( temp );	}	
 					else if (temp.indexOf("http") != -1 && temp.indexOf("twitter")!=-1 ){ temp = temp.replace("http:",""); contact.setTwitterSn( temp );	}	
@@ -488,17 +490,21 @@ public class LDAPUtil
 			 String gtalk = contact.getIcqSn();
 			 String msn = contact.getMsnSn();
 			 String vhf = contact.getJabberSn();
-			 
+			 System.out.println(" vhf "+ vhf );
+			 System.out.println("temp skype :"+skype );
 			 /*mod0.add(contact.getJabberSn());	
 			 mod0.add(contact.getIcqSn());
 			 mod0.add(contact.getMsnSn());	
 			 mod0.add(contact.getSkypeSn());	
 			 mod0.add(contact.getAimSn());	*/
-			 if(contact.getJabberSn()!=null&& contact.getJabberSn()!="" ) mod0.add("VHFcallsign:"+contact.getJabberSn());	
-			 if(contact.getIcqSn()!=null&& contact.getIcqSn()!="" ) mod0.add("gtalk:chat?jid="+contact.getIcqSn());
-			 if(contact.getMsnSn()!=null&& contact.getMsnSn()!="" )  mod0.add("msnim:chat?contact="+contact.getMsnSn());	
-			 if(contact.getSkypeSn()!=null&& contact.getSkypeSn()!="" ) mod0.add("skype:"+contact.getSkypeSn());	
-			 if(contact.getAimSn()!=null&& contact.getAimSn()!="" )  mod0.add("sip:"+contact.getAimSn());
+			 if(vhf!=null&& vhf!="" ) mod0.add("VHFcallsign:"+vhf.toUpperCase() );	
+			 if(gtalk!=null&& gtalk!="" ) mod0.add("gtalk:chat?jid="+gtalk );
+			 if(msn!=null&& msn!="" )  mod0.add("msnim:chat?contact="+msn );	
+			 if(skype!=null&& skype!="" ) { 
+				 if(skype.indexOf("?chat")==-1) contact.setSkypeSn((skype= skype+"?chat"));
+				 mod0.add("skype:"+skype);	
+			 }
+			 if(sip!=null&& sip!="" )  mod0.add("sip:"+sip);
 			 if(contact.getFacebookSn()!=null&& contact.getFacebookSn()!="" )  mod0.add("http:"+contact.getFacebookSn().replace("http://","") );
 			 if(contact.getTwitterSn()!=null&& contact.getTwitterSn()!="" )  mod0.add("http:"+contact.getTwitterSn().replace("http://",""));
 			 if(contact.getMySpaceSn()!=null&& contact.getMySpaceSn()!="" )  mod0.add("http:"+contact.getMySpaceSn().replace("http://",""));
@@ -845,23 +851,37 @@ public class LDAPUtil
 		{	
 			_log.debug(" user"+user.getPassword() +" unencrypt: "+user.getPasswordUnencrypted() );
 			
-			 DirContext ctx = getLDAPContext(user);	
+			 DirContext ctx = getLDAPContext(user);
+			 com.liferay.portal.model.Image image = null;
 			 
-			 _log.info(" 1"+ user.getPassword());
+			 _log.info(" 1 user.getPortraitId() : "+ user.getPortraitId() );
+			 int size=3;
 			 
-			 ModificationItem[]  mods= new ModificationItem[3];	
+			 
+			 ModificationItem[]  mods= new ModificationItem[4];	
 			 Attribute mod0 = new BasicAttribute("sn");	
 			 Attribute mod1 = new BasicAttribute("cn");	
-			 Attribute mod2 = new BasicAttribute("title");	
+			 Attribute mod2 = new BasicAttribute("title");	 
+			 Attribute mod3 = new BasicAttribute("jpegPhoto");
 			 
 			 mod0.add(user.getLastName() );
 			 mod1.add(user.getFirstName() );
 			 mod2.add(user.getJobTitle() );
-			 
-			 _log.info(" 2");
 			 mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod0);
 			 mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
 			 mods[2] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod2);
+			 
+			 mods[3] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE, mod3);			
+			 
+			 if( user.getPortraitId() > 0 )
+			 {
+				 image = ImageLocalServiceUtil.getImage(user.getPortraitId());
+				 byte[] jpegBytes = image.getTextObj();
+				 Attribute jpegPhoto = new BasicAttribute("jpegPhoto", jpegBytes);				
+				 mods[3] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, jpegPhoto);				
+				 _log.info(" 2");
+			 }
+			 
 			 
 			 _log.info(" 3"+user.getScreenName() );
 			 ctx.modifyAttributes("ldap://ldap-dev.globalepic.lu:389/uid="+user.getScreenName() +",ou=users,ou=people,dc=emergency,dc=lu", mods);
