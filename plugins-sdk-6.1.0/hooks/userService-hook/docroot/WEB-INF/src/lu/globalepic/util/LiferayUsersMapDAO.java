@@ -22,17 +22,17 @@
 
 package lu.globalepic.util;
 
-import java.security.InvalidKeyException;
 import java.security.Key;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import javax.crypto.*;
-import sun.misc.*;
+import javax.crypto.Cipher;
+
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 /**
@@ -49,8 +49,6 @@ public class LiferayUsersMapDAO {
 	private static final String _INSERT_PASSWORD = "insert into pink_elephant (plain,userid) values (?,?);";
 	private static final String _GET_PASSWORD_BY_ID ="select plain from pink_elephant where userid=?;"; 
 	private static final String _UPDATE_ORIGINAL_PASSWORD ="update user_ set password_= ? where userid=?;";
-	private static String algorithm = "DESede";
-	private static String DB_NAME = "liferay-dev";
 	private static String DB_USER_NAME = "kmohammed";
 	private static String DB_PWD = "F2JcodZyf29KQNnJNa3T";//;"F2JcodZyf29KQNnJNa3T";//"welcome";//;
 	private static String connectionURL = "jdbc:postgresql://localhost:5432/liferay-dev";	
@@ -64,7 +62,6 @@ public class LiferayUsersMapDAO {
 		_log.info(" ################################################");
 		Connection con = null;
 		PreparedStatement ps = null;
-		ResultSet rs = null;
 		boolean isStored = false;
 		
 		try 
@@ -153,14 +150,14 @@ public class LiferayUsersMapDAO {
 				
 			
 				encryptionBytesFromDB = decrypt(encryptionBytesFromDB);
-				//_log.info("���������  res  pwd : "+pwd );
+				//_log.info("���������������������������  res  pwd : "+pwd );
 				//ps.close();
 				//con.close();
 				
 						
 			}
 			
-			_log.info("���������  res : "+rs);
+			_log.info("���������������������������  res : "+rs);
 
 			ps.close();
 			con.close();
@@ -185,7 +182,6 @@ public class LiferayUsersMapDAO {
 		_log.info(" ################################################");
 		Connection con = null;
 		PreparedStatement ps = null;
-		ResultSet rs = null;
 		boolean isUpdated = false;
 		
 		try 
@@ -206,7 +202,7 @@ public class LiferayUsersMapDAO {
 			ps.setLong(2, userId  );
 			int res =ps.executeUpdate();
 			
-			_log.info("���������  res : "+res);
+			_log.info("���������������������������  res : "+res);
 			
 			if( res >= 0 )
 			{
