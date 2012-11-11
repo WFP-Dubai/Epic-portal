@@ -102,6 +102,7 @@ public class LDAPUtil
 
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static DirContext  getLDAPContext(User user)
 	{
 		_log.info(" ############## START  LDAPUtil.getLDAPContext #####################"+user.getScreenName() );
@@ -186,6 +187,7 @@ public class LDAPUtil
 		return ldapUserInfo;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public static Attributes getAllAttributes(DirContext ctx, User user)
 	{
 		_log.info(" ############## START  LDAPUtil.getAllAttributes ##################### screenName :"+screenName);
@@ -279,6 +281,7 @@ public class LDAPUtil
 		_log.info(" ############## END  LDAPUtil.populateLDAPUser #####################");
 		
 	}
+	@SuppressWarnings("rawtypes")
 	public static List<String> getAttributeValueListByName(Attributes attrs, String attributeName )
 	{
 		_log.info(" ############## START  LDAPUtil.getAttributeValueListByName #####################"+attributeName);
@@ -406,6 +409,7 @@ public class LDAPUtil
 		_log.info(" ############## END  LDAPUtil.beforeUpdateContact #####################contact: "+contact );		
 		
 	}
+	@SuppressWarnings("unused")
 	public static void updatePassword(User user)
 	{
 		
@@ -444,7 +448,6 @@ public class LDAPUtil
 			 _log.info(" eeerere  ");
 			 user.setPasswordModified(false);
 			 _log.info(" 222bbvbvbv22222  ");
-//			 FIXME: not working local save???? 
 			 UserLocalServiceUtil.updatePasswordManually(user.getUserId(),
 						user.getPassword(),
 						true,
@@ -855,9 +858,6 @@ public class LDAPUtil
 			 com.liferay.portal.model.Image image = null;
 			 
 			 _log.info(" 1 user.getPortraitId() : "+ user.getPortraitId() );
-			 int size=3;
-			 
-			 
 			 ModificationItem[]  mods= new ModificationItem[4];	
 			 Attribute mod0 = new BasicAttribute("sn");	
 			 Attribute mod1 = new BasicAttribute("cn");	
