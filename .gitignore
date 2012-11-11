@@ -12,3 +12,4 @@ classes
 plugins-sdk-6.1.0/hooks/userService-hook/.classpath
 .DS_Store
 dist
+.classpath
