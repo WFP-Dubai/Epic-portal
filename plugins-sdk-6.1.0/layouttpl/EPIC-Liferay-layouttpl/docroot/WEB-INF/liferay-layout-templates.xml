@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE layout-templates PUBLIC "-//Liferay//DTD Layout Templates 6.1.0//EN" "http://www.liferay.com/dtd/liferay-layout-templates_6_1_0.dtd">
+
+<layout-templates>
+	<custom>
+		<layout-template id="epic1" name="EPIC-1">
+			<template-path>/epic1.tpl</template-path>
+			<wap-template-path>/epic1.wap.tpl</wap-template-path>
+			<thumbnail-path>/epic1.png</thumbnail-path>
+		</layout-template>
+		<layout-template id="epic2l" name="EPIC-2L">
+			<template-path>/epic2l.tpl</template-path>
+			<wap-template-path>/epic2l.wap.tpl</wap-template-path>
+			<thumbnail-path>/epic2l.png</thumbnail-path>
+		</layout-template>
+		<layout-template id="epic2r" name="EPIC-2R">
+			<template-path>/epic2r.tpl</template-path>
+			<wap-template-path>/epic2r.wap.tpl</wap-template-path>
+			<thumbnail-path>/epic2r.png</thumbnail-path>
+		</layout-template>
+		<layout-template id="epic3" name="EPIC-3">
+			<template-path>/epic3.tpl</template-path>
+			<wap-template-path>/epic3.wap.tpl</wap-template-path>
+			<thumbnail-path>/epic3.png</thumbnail-path></layout-template></custom>
+</layout-templates>
