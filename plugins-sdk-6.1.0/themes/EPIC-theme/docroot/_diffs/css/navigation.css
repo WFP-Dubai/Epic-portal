@@ -1,0 +1,188 @@
+/* ---------- Add/remove page ---------- */
+
+.modify-pages {
+	li {
+		position: relative;
+	}
+
+	.delete-tab {
+		background: #333 url(../images/portlet/close_borderless.png) no-repeat 50%;
+		cursor: pointer;
+		display: block;
+		height: 8px;
+		margin-top: -7px;
+		padding: 3px;
+		position: absolute;
+		right: 1px;
+		text-indent: -9999em;
+		top: 50%;
+		width: 8px;
+	}
+}
+
+/*------ Navigation portlet ------*/
+
+#navigation {
+	background: #74AA50;
+	clear: both;
+	margin: 0 0 5px 0;
+	position: relative;
+	z-index: 1;
+}
+
+#navigation ul {
+	list-style: none;
+	margin: 0;
+	padding: 5px;
+}
+
+.nav-menu {
+	ul {
+		padding-left: 10px;
+	}
+
+	li {
+		a.ancestor {
+			font-weight: bold;
+		}
+
+		a.selected {
+			color: #000;
+			font-weight: bold;
+			text-decoration: none;
+		}
+	}
+}
+
+#navigation li, #navigation a {
+	display: inline-block;
+}
+
+#navigation li {
+	position: relative;
+	vertical-align: top;
+}
+
+#navigation a {
+	color: #FFF;
+	font-weight: bold;
+	margin: 0 1px;
+	padding: 3px 15px;
+	text-decoration: none;
+}
+
+#navigation .yui3-dd-drop a {
+	cursor: move;
+}
+
+#navigation .selected a, #navigation li.hover a, #navigation a:hover, #navigation a:focus, #navigation .child-menu li a, #navigation .yui3-dd-dragging, .lfr-navigation-proxy {
+	background: #74AA50;
+	color: #FFF;
+	outline: 0;
+}
+
+#navigation li.hover .child-menu {
+	background:#74aa50;
+	display: block;
+	position: absolute;
+	z-index: 25000;
+    padding-right: 35px;
+}
+
+#navigation .child-menu {
+	display: none;
+}
+
+#navigation .child-menu li {
+	border-width: 0 0 1px;
+	display: block;
+	float: none;
+	margin: 0;
+	width:100%;
+}
+
+#navigation .child-menu li a {
+	cursor: pointer !important;
+	width:100%;
+	border:1px solid #74aa50;
+}
+
+#navigation .child-menu li a:hover, 
+#navigation li a:hover,
+#navigation li a.active {
+	background-color: #ffffff;
+	color: #2f4520;
+}
+
+#navigation .child-menu .selected a {
+	background: #74AA50;
+	color: #2f4520;
+	width:100%;
+}
+
+.nav-menu-style-arrows ul {
+}
+
+li.searchbox {
+	float:right;
+}
+
+.modify-pages .delete-tab {
+	display:none;
+}
+
+/* ---------- Page template selector ---------- */
+
+.aui-form-options {
+	border: 1px solid #AAA;
+	display: inline-block;
+	vertical-align: middle;
+
+	input {
+		border-width: 0;
+		display: inline;
+		float: left;
+	}
+}
+
+.aui-form-triggers {
+	float: left;
+}
+
+.aui-form-trigger {
+	background: #C4C4C4 url(../images/application/button_bg.png) repeat-x 0 0;
+	border-left: 1px solid #BBB;
+	display: inline-block;
+	float: left;
+
+	img {
+		background: url() no-repeat 50% 40%;
+		height: 25px;
+		padding: 0 3px;
+		vertical-align: middle;
+		width: 16px;
+	}
+
+	&:hover, &:focus {
+		background-color: #83B0CA;
+		background-image: url(../images/application/button_bg_over.png);
+	}
+}
+
+.aui-trigger-selected {
+	background-color: #EBEBEB;
+	background-image: url(../images/application/button_bg_selected.png);
+
+	&:hover, &:focus {
+		background-color: #B7DEF4;
+		background-image: url(../images/application/button_bg_selected_over.png);
+	}
+}
+
+.aui-options-trigger img {
+	background-image: url(../images/common/configuration.png);
+}
+
+.aui-save-trigger img {
+	background-image: url(../images/dock/my_place_current.png);
+}

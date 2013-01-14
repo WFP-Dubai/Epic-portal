@@ -1,0 +1,49 @@
+<nav class="$nav_css_class" id="navigation">
+	<h1>
+		<span>#language("navigation")</span>
+	</h1>
+
+	<ul>
+		<li class="searchbox">
+			<form onsubmit="ctem_3_search(); return false;" name="ctem_3_fm" method="get" action="/home?p_p_id=3&amp;p_p_lifecycle=0&amp;p_p_state=maximized&amp;p_p_mode=view&amp;p_p_col_id=column-1&amp;p_p_col_count=4&amp;_3_struts_action=%2Fsearch%2Fsearch&amp;_3_redirect=%2Fhome">
+<input type="hidden" value="3" name="p_p_id">
+<input type="hidden" value="0" name="p_p_lifecycle">
+<input type="hidden" value="maximized" name="p_p_state">
+<input type="hidden" value="view" name="p_p_mode">
+<input type="hidden" value="column-1" name="p_p_col_id">
+<input type="hidden" value="4" name="p_p_col_count">
+<input type="hidden" value="/search/search" name="_3_struts_action">
+<input type="hidden" value="/web/apps/home" name="_3_redirect">
+<label for="SearchBox" style="display:none;">Search box</label>
+<input id="SearchBox" type="text" value="Search" name="_3_keywords" onfocus="if(this.value==this.defaultValue)this.value='';" onblur="if(this.value=='')this.value=this.defaultValue;">
+&nbsp;   
+<input type="image" title="Search" src="/html/themes/classic/images/common/search.png" alt="search">
+&nbsp; 
+<label for="SearchOptions" style="display:none;">Search button</label>
+<select id="SearchOptions" style="display: none;" name="_3_groupId"><option value="0" selected="selected">Everything</option><option value="10727">This Site</option></select> </form>
+		</li>
+		#foreach ($nav_item in $nav_items)
+			#if ($nav_item.isSelected())
+			<li class="selected">
+			#else
+			<li>
+			#end
+				<a href="$nav_item.getURL()" $nav_item.getTarget()><span>$nav_item.icon() $nav_item.getName()</span></a>
+
+				#if ($nav_item.hasChildren())
+					<ul class="child-menu">
+						#foreach ($nav_child in $nav_item.getChildren())
+							#if ($nav_child.isSelected())
+								<li class="selected">
+							#else
+								<li>
+							#end
+								<a href="$nav_child.getURL()" $nav_child.getTarget()>$nav_child.getName()</a>
+							</li>
+						#end
+					</ul>
+				#end
+			</li>
+		#end
+	</ul>
+</nav>

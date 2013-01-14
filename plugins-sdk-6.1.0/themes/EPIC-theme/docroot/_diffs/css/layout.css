@@ -1,0 +1,69 @@
+/* ---------- Wrapper ---------- */
+
+#wrapper {
+	background:#ffffff;						/* Fallback for web browsers that doesn't support RGBa */
+	background:rgba(255, 255, 255, 0.60);	/* RGBa with 0.6 opacity */	
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#88ffffff, endColorstr=#88ffffff);			/* For IE 5.5 - 7*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#88ffffff, endColorstr=#88ffffff)";	/* For IE 8*/
+	position:relative;
+	width:80%;
+	margin:0 5%;
+	padding:0 5%;
+}
+
+.portlet-layout {
+	clear: both;
+	display: table;
+	border-spacing: 0;
+	table-layout: auto;
+	width: 100%;
+}
+
+.portlet-column {
+	display: table-cell;
+	vertical-align: top;
+}
+
+.portlet-column-content {
+	padding: 5px;
+}
+
+.portlet-column-content-only, .ltr .portlet-column-content-first, .rtl .portlet-column-content-last {
+	padding-left: 0;
+}
+
+.portlet-column-content-only, .ltr .portlet-column-content-last, .rtl .portlet-column-content-first {
+	padding-right: 0;
+}
+
+/* ---------- Column widths ---------- */
+
+.portlet-column-content.empty {
+	padding:50px;
+}
+
+#main-content.dragging .portlet-column {
+	border: 3px double #828F95;
+	height: 100px;
+	min-height: 100px;
+}
+
+.ie6, .ie7 {
+	div.portlet-layout {
+		height: 1%;
+	}
+
+	div.portlet-column {
+		float: left;
+		overflow: hidden;
+		width: 100%;
+	}
+
+	div.aui-column-last {
+		margin-right: -1px;
+	}
+
+	.portlet-column-content {
+		zoom: 1;
+	}
+}
