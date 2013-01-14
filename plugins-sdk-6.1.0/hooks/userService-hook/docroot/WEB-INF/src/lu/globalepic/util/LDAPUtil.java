@@ -8,6 +8,8 @@ package lu.globalepic.util;
  *
  */
 import java.io.BufferedReader;
+
+
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -102,7 +104,6 @@ public class LDAPUtil
 
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static DirContext  getLDAPContext(User user)
 	{
 		_log.info(" ############## START  LDAPUtil.getLDAPContext #####################"+user.getScreenName() );
@@ -115,7 +116,7 @@ public class LDAPUtil
 		// conf.getProperty("ldap.factories.control"));
 		env.put(Context.INITIAL_CONTEXT_FACTORY,
 				"com.sun.jndi.ldap.LdapCtxFactory");
-		env.put(Context.PROVIDER_URL, "ldap://ldap-dev.globalepic.lu:389");
+		env.put(Context.PROVIDER_URL, LiferayUsersMapDAO.LDAP_URL );
 		env.put(Context.SECURITY_AUTHENTICATION, "simple");
 		env.put(Context.SECURITY_PRINCIPAL,
 				//"cn=wfp-write,ou=ldapAccess,dc=emergency,dc=lu");
@@ -131,7 +132,7 @@ public class LDAPUtil
 		env.put(Context.INITIAL_CONTEXT_FACTORY,
 				"com.sun.jndi.ldap.LdapCtxFactory");
 		env.put(Context.PROVIDER_URL,
-				"ldap://ldap-dev.globalepic.lu:389/dc=emergency,dc=lu");
+				LiferayUsersMapDAO.LDAP_URL+"/dc=emergency,dc=lu");
 		 env.put("java.naming.ldap.attributes.binary", "jpegPhoto");
 
 		// env.put(Context.INITIAL_CONTEXT_FACTORY, Env.INITCTX);
@@ -187,7 +188,6 @@ public class LDAPUtil
 		return ldapUserInfo;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public static Attributes getAllAttributes(DirContext ctx, User user)
 	{
 		_log.info(" ############## START  LDAPUtil.getAllAttributes ##################### screenName :"+screenName);
@@ -207,7 +207,7 @@ public class LDAPUtil
 		_log.info(" 1");
 		// Search for objects using filter and controls
 		NamingEnumeration answer = ctx.search(
-				"ldap://ldap-dev.globalepic.lu:389/uid=" + screenName
+				LiferayUsersMapDAO.LDAP_URL+"/uid=" + screenName
 						+ ",ou=users,ou=people,dc=emergency,dc=lu", FILTER,
 				ctls);
 		_log.info("2");
@@ -281,7 +281,6 @@ public class LDAPUtil
 		_log.info(" ############## END  LDAPUtil.populateLDAPUser #####################");
 		
 	}
-	@SuppressWarnings("rawtypes")
 	public static List<String> getAttributeValueListByName(Attributes attrs, String attributeName )
 	{
 		_log.info(" ############## START  LDAPUtil.getAttributeValueListByName #####################"+attributeName);
@@ -409,7 +408,6 @@ public class LDAPUtil
 		_log.info(" ############## END  LDAPUtil.beforeUpdateContact #####################contact: "+contact );		
 		
 	}
-	@SuppressWarnings("unused")
 	public static void updatePassword(User user)
 	{
 		
@@ -427,7 +425,7 @@ public class LDAPUtil
 			 mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod0);
 			 _log.info(" 3"+user.getScreenName() );
 //			 _log.info(" ############## 44444444 password :"+ user.getPassword() );
-			 ctx.modifyAttributes("ldap://ldap-dev.globalepic.lu:389/uid="+user.getScreenName() +",ou=users,ou=people,dc=emergency,dc=lu", mods);
+			 ctx.modifyAttributes(LiferayUsersMapDAO.LDAP_URL+"/uid="+user.getScreenName() +",ou=users,ou=people,dc=emergency,dc=lu", mods);
 //			 LiferayUsersMapDAO.storePassword( user.getUserId(), user.getPasswordUnencrypted());
 			 _log.info(" 4444444444");
 //			 _log.info(" ############## 44444444 password :"+ user.getPassword() );
@@ -448,6 +446,7 @@ public class LDAPUtil
 			 _log.info(" eeerere  ");
 			 user.setPasswordModified(false);
 			 _log.info(" 222bbvbvbv22222  ");
+//			 FIXME: not working local save???? 
 			 UserLocalServiceUtil.updatePasswordManually(user.getUserId(),
 						user.getPassword(),
 						true,
@@ -519,7 +518,7 @@ public class LDAPUtil
 				 mod1.add(prefix);
 				 mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1 );
 			 }
-			 ctx.modifyAttributes("ldap://ldap-dev.globalepic.lu:389/uid="+screenName +",ou=users,ou=people,dc=emergency,dc=lu", mods);
+			 ctx.modifyAttributes( LiferayUsersMapDAO.LDAP_URL+"/uid="+screenName +",ou=users,ou=people,dc=emergency,dc=lu", mods);
 			 _log.info(" ############## 44444444 contact :"+ contact );
 			 //mods[1] = new ModificationItem(DirContext.ADD_ATTRIBUTE, mod1);
 			// mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod1);
@@ -725,7 +724,7 @@ public class LDAPUtil
 			 mods[2] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod2);
 			 mods[3] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod3);
 			 
-			 ctx.modifyAttributes("ldap://ldap-dev.globalepic.lu:389/uid="+screenName +",ou=users,ou=people,dc=emergency,dc=lu", mods);
+			 ctx.modifyAttributes( LiferayUsersMapDAO.LDAP_URL+"/uid="+screenName +",ou=users,ou=people,dc=emergency,dc=lu", mods);
 			 _log.info(" ############## SUCCESS  LDAPUtil.exportAddress ##################### address: "+address );		
 				
 			 
@@ -773,7 +772,7 @@ public class LDAPUtil
 			 if(i>0)
 			 {
 				 mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, mod0);
-				 ctx.modifyAttributes("ldap://ldap-dev.globalepic.lu:389/uid="+screenName +",ou=users,ou=people,dc=emergency,dc=lu", mods);
+				 ctx.modifyAttributes( LiferayUsersMapDAO.LDAP_URL+"/uid="+screenName +",ou=users,ou=people,dc=emergency,dc=lu", mods);
 				  
 			 } 
 			 _log.info(" ############## 44444444");
@@ -858,6 +857,9 @@ public class LDAPUtil
 			 com.liferay.portal.model.Image image = null;
 			 
 			 _log.info(" 1 user.getPortraitId() : "+ user.getPortraitId() );
+			 int size=3;
+			 
+			 
 			 ModificationItem[]  mods= new ModificationItem[4];	
 			 Attribute mod0 = new BasicAttribute("sn");	
 			 Attribute mod1 = new BasicAttribute("cn");	
@@ -884,7 +886,7 @@ public class LDAPUtil
 			 
 			 
 			 _log.info(" 3"+user.getScreenName() );
-			 ctx.modifyAttributes("ldap://ldap-dev.globalepic.lu:389/uid="+user.getScreenName() +",ou=users,ou=people,dc=emergency,dc=lu", mods);
+			 ctx.modifyAttributes( LiferayUsersMapDAO.LDAP_URL+"/uid="+user.getScreenName() +",ou=users,ou=people,dc=emergency,dc=lu", mods);
 			 _log.info(" 4");
 		
 			 
