@@ -1,0 +1,69 @@
+/*---   hide everything but the content ---*/
+
+* {
+    visibility:hidden;
+}
+  
+#content * {
+    visibility:visible;
+}
+
+/*---   then hide the navigation but show the header ---*/
+
+#breadcrumbs,
+.site-breadcrumbs  {
+    visibility: hidden;
+	display:none;
+}
+
+div#heading {
+    visibility:visible;
+	display:block;
+}
+
+/*---   now the overall setup ---*/
+
+html,
+body,
+#wrapper {
+	width:6.25in;
+	font:12px/15px "Times New Roman", Times, serif;
+	background:none;
+	color:#000;
+	margin:0;
+	padding:0;
+}
+
+@font-face {
+	font-family: DIN;
+	src: url('/EPIC-theme/css/DINPro.ttf'),
+	     url('/EPIC-theme/css/DINPro.eot'); /* IE9 */
+}
+ 
+h1, h2, h3 {
+	font-family: DIN;
+	color:#000;
+}
+
+.RC {
+	-webkit-box-shadow:none;
+	-moz-box-shadow:none; 
+	box-shadow:none; 
+}
+
+.portlet-boundary {
+	border:1px solid #CCC;
+	display:block;
+}
+
+/*---   now the details ---*/
+
+img.photo {
+	width:50%;
+	height:50%
+}
+
+.carousel{
+    width:6in !important;
+}
+

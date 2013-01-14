@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+#parse ($init)
+
+<html class="#language("lang.dir")" dir="#language("lang.dir")" lang="$w3c_language_id">
+
+<head>
+	<title>EPIC: $the_title</title>
+
+	$theme.include($top_head_include)
+
+	<script type="text/javascript" src="/html/themes/classic/js/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript">var switchTo5x=true;</script>
+	<script type="text/javascript" src="https://ws.sharethis.com/button/buttons.js"></script>
+	<script type="text/javascript">
+		stLight.options({
+			publisher: 'ur-91ce6313-a45b-fb2d-4a2d-b51d583b223d',
+			onhover: false
+		});
+	</script>
+	<link rel="stylesheet" type="text/css" media="print" href="/EPIC-theme/css/print.css" />
+</head>
+
+<body class="$css_class">
+
+$theme.include($body_top_include)
+
+#if ($is_signed_in)
+	#dockbar()
+#end
+
+<div id="wrapper">
+	<a href="#main-content" id="skip-to-content">#language("skip-to-content")</a>
+
+	<header id="banner" role="banner">
+		<div id="heading">
+			<h1 class="site-title">
+				<a class="$logo_css_class" href="$site_default_url" title="#language("go-to") $site_name">
+					<img alt="$logo_description" height="$site_logo_height" src="$site_logo" width="$site_logo_width" />
+				</a>
+
+				#if ($show_site_name)
+					<span class="site-name" title="#language("go-to") $site_name">
+						$site_name
+					</span>
+				#end
+			</h1>
+
+			<h2 class="page-title">
+				<span>$the_title</span>
+			</h2>
+		</div>
+
+		#if ($has_navigation || $is_signed_in)
+			#parse ("$full_templates_path/navigation.vm")
+		#end
+
+		#if (!$is_signed_in)
+			<a href="$sign_in_url" id="sign-in" rel="nofollow">$sign_in_text</a>
+		#end
+
+		<noscript>
+			Your browser does not support JavaScript or has it disabled.
+			This website's functionality will be impaired unless you enable Javascript.
+		</noscript>
+	</header>
+
+	<div id="content">
+		<nav class="site-breadcrumbs" id="breadcrumbs">
+			<h1>
+				<span>#language("breadcrumbs")</span>
+			</h1>
+			#breadcrumbs()
+		</nav>
+
+		#if ($selectable)
+			$theme.include($content_include)
+		#else
+			$portletDisplay.recycle()
+
+			$portletDisplay.setTitle($the_title)
+
+			$theme.wrapPortlet("portlet.vm", $content_include)
+		#end
+	</div>
+
+	<footer id="footer" role="contentinfo">
+		<div id="fbodyy" >
+			<div id="sharethis">
+				<span class="st_twitter"></span>
+				<span class="st_facebook"></span>
+				<span class="st_googleplus"></span>
+				<span class="st_linkedin"></span>
+				<span class="st_sharethis"></span>
+				<span class="st_email"></span>
+				<a class="st_print" href="javascript:window.print()"><img src="/EPIC-theme/images/Printer-icon.png" alt="Print this page" /></a>
+			</div>
+			<div id="footerTableDiv">
+				<ul class="footerlist" >
+					<li><b>Epic</b></li>
+					<li><a href="/home">Home</a></li>
+					<li><a href="/about-us">About Us</a></li>
+					<li><a href="/news">News</a></li>
+					<li><a href="/contact-us">Contact Us</a></li>
+				</ul>
+				<ul class="footerlist">
+					<li><b>Tools</b></li>
+					<li><a href="/epic-portal">EPIC Portal </a></li>
+					<li><a href="/epic-apps">EPIC Apps</a></li>
+					<li><a href="/epic-unified-communications">EPIC Unified Communications</a></li>
+					<li><a href="/epic-interact">EPIC Interact</a></li>
+					<li><a href="/epic-situation-room">EPIC Situation Room</a></li>
+				</ul>
+				<ul class="footerlist">
+					<li><b>About Us</b></li>
+					<li><a href="/partners">Partners</a></li>
+					<li><a href="/guiding-principles">Guiding principles</a></li>
+					<li><a href="/governance">Governance</a></li>
+					<li><a href="/proof-of-concept">Proof of Concept</a></li>
+				</ul>
+				<img src="/EPIC-theme/images/WFP_Long_White.gif" alt="WFP Logo" />
+				<div id="footerrBarDIV">
+					<a class="footerrBar" href="/contact-webmaster">Contact Webmaster</a>
+					| 
+					<a class="footerrBar" href="/site-map">Sitemap</a>
+					<!--//
+					| 
+					<a class="footerrBar" href="/privacy-policy">Privacy Policy</a>
+					| 
+					<a class="footerrBar" href="/terms-conditions" >Terms and Conditions</a>
+					//-->
+					<br />
+					Copyright – World Food Programme © 2013
+				</div>
+			</div>
+		</div>
+	</footer>
+</div>
+
+$theme.include($body_bottom_include)
+
+$theme.include($bottom_include)
+</body>
+</html>
