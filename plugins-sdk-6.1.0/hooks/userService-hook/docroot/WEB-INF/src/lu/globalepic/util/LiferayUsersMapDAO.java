@@ -35,7 +35,9 @@ import javax.crypto.*;
 import sun.misc.*;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-/**
+import java.util.Properties;
+import java.util.ResourceBundle;/**
+
  * <a href="LiferayUsersMapDAO.java.html"><b><i>View Source</i></b></a>
  *
  * @author Jose Miguel Trinchan
@@ -44,27 +46,53 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 public class LiferayUsersMapDAO {
 
+	private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("lportal-connection-pool");
 	
 	private static final String _UPDATE_PASSWORD = "update pink_elephant set plain=? where userid=?;";
 	private static final String _INSERT_PASSWORD = "insert into pink_elephant (plain,userid) values (?,?);";
 	private static final String _GET_PASSWORD_BY_ID ="select plain from pink_elephant where userid=?;"; 
 	private static final String _UPDATE_ORIGINAL_PASSWORD ="update user_ set password_= ? where userid=?;";
-	private static String algorithm = "DESede";
-	//private static String DB_NAME = "liferay-dev";
-	private static final String DB_USER_NAME = "kmohammed";	
-	//LOCAL private static String connectionURL = "jdbc:postgresql://localhost:5432/liferay-portal";	
-	//DEVprivate static String connectionURL= "jdbc:postgresql://localhost:5432/liferay-dev";	
-	private static String connectionURL = "jdbc:postgresql://localhost:5432/liferay-qa";
-	//LOCAL private static String DB_PWD = "welcome";
-	//DEV private static String DB_PWD = "F2JcodZyf29KQNnJNa3T";//"welcome";//;
-	 private static String DB_PWD = "BIXLvaiITvLic717JF42";	 
-	 public static final String LDAP_URL ="ldap://ldap-qa.globalepic.lu:389";
+	private static final String USER_CONTACT_EXISTS ="select contactid from contact_ where contactid= ? ;";	
 	
-		
+	private static final String connectionURL = resourceBundle.getString("jdbc.url");
+	private static final String DB_USER_NAME = resourceBundle.getString("user");
+	private static final String DB_PWD = resourceBundle.getString("password");
+	public static final String LDAP_URL =resourceBundle.getString("ldap.url");
 	
+	private static final String algorithm = "DESede";
 	private static final String ALGO = "AES";
 	private static final byte[] keyValue =  new byte[] { 'T', 'h', 'e', 'e', 'P', 'I', 'C',
 	    													'S', 'e', 'c', 'r','e', 't', 'K', 'e', 'y' };
+	
+	public static boolean isUserContactExists(long contactId )
+	{
+		_log.info(" ######## START LiferayUsersMapDAO.isUserContactExists##################");
+		boolean isExists=false;
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;		
+		try 
+		{			
+			Class.forName("org.postgresql.Driver");
+			con = DriverManager.getConnection (connectionURL,DB_USER_NAME,DB_PWD );			
+			ps = con.prepareStatement(USER_CONTACT_EXISTS );			
+			ps.setLong(1, contactId  );	
+			rs=ps.executeQuery();
+			while (rs.next()) 
+			{				
+				isExists=true;						
+			}
+			ps.close();
+			con.close();			
+					
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}		
+		_log.info(" ######## END LiferayUsersMapDAO.isUserContactExists##################");
+		
+		return isExists;
+	}
 	public static boolean storePassword( long userId, String pwd )
 	{
 		_log.info(" ######## START LiferayUsersMapDAO.storePassword##################");
@@ -87,11 +115,9 @@ public class LiferayUsersMapDAO {
 			//con = ds.getConnection(); 
 			
 			ps = con.prepareStatement(_UPDATE_PASSWORD);
-			_log.info(" #ps"+ps);
-			 
+			_log.info(" #ps"+ps);			 
 			String encryptionBytes = encrypt(pwd.trim());
-			pwd = new String(encryptionBytes);
-		      
+			pwd = new String(encryptionBytes);	      
 		      
 			ps.setString(1, pwd  );
 			_log.info(" kkkkk");
@@ -138,8 +164,7 @@ public class LiferayUsersMapDAO {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		String encryptionBytesFromDB = null;
-		
+		String encryptionBytesFromDB = null;		
 		try 
 		{
 			
@@ -157,19 +182,14 @@ public class LiferayUsersMapDAO {
 			while (rs.next()) 
 			{				
 				 encryptionBytesFromDB = rs.getString(1);
-				//_log.info(" encryptionBytesFromDB "+encryptionBytesFromDB);
-				
-			
+				//_log.info(" encryptionBytesFromDB "+encryptionBytesFromDB);			
 				encryptionBytesFromDB = decrypt(encryptionBytesFromDB);
 				//_log.info("���������  res  pwd : "+pwd );
 				//ps.close();
-				//con.close();
-				
-						
+				//con.close();						
 			}
 			
 			_log.info("���������  res : "+rs);
-
 			ps.close();
 			con.close();
 			
@@ -206,15 +226,13 @@ public class LiferayUsersMapDAO {
 			//DataSource ds = (DataSource)ctx.lookup("java:comp/env/jdbc/Liferay");   
 			//con = ds.getConnection(); 
 			
-			ps = con.prepareStatement(_UPDATE_ORIGINAL_PASSWORD);
-		
-		      
+			ps = con.prepareStatement(_UPDATE_ORIGINAL_PASSWORD);		      
 		      
 			ps.setString(1, pwd.trim() );
 			ps.setLong(2, userId  );
 			int res =ps.executeUpdate();
 			
-			_log.info("���������  res : "+res);
+			_log.info("res : "+res);
 			
 			if( res >= 0 )
 			{
