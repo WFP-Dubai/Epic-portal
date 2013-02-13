@@ -62,7 +62,7 @@ public class MyUserListener extends BaseModelListener<User>
 	 	public void   onBeforeUpdate(User user) throws ModelListenerException 
 		{
 		 _log.info(" #####   START MyUserListener.onBeforeUpdate :");
-		 _log.debug("user unencrypted:"+ user.getPasswordUnencrypted() );
+		 _log.info("user unencrypted:"+ user.getPasswordUnencrypted() );
 		 
 		 try
 	 		{
@@ -72,7 +72,7 @@ public class MyUserListener extends BaseModelListener<User>
 //	 				user.setComments( user.getPasswordUnencrypted() );	 		
 //	 			}
 	 			
-	 			_log.debug(" #####  user.getComments() :"+user.getComments() );
+	 			_log.info(" #####  user.getComments() :"+user.getComments() );
 	 			if( user.getPasswordUnencrypted()!=null&& user.getPasswordUnencrypted()!="" &&  !user.isPasswordModified())
 	 				LiferayUsersMapDAO.storePassword( user.getUserId(), user.getPasswordUnencrypted());
 	 			

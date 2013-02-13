@@ -36,6 +36,7 @@ public class MyContactListener extends BaseModelListener<Contact>
 	 public void onBeforeCreate(Contact contact) throws ModelListenerException 
 	 {
 		 	_log.info(" #####   START MyContactListener.onBeforeCreate : contact"+ contact );
+		 	if( contact!=null && contact.getContactId() > 0 && lu.globalepic.util.LiferayUsersMapDAO.isUserContactExists( contact.getContactId() ) ){
 		 	LDAPUserInfo ldapUser = LDAPUtil.getLDAPUserInfoByContact(contact);
 		 	_log.info( " ldapUser "+ ldapUser );
 		 	contact.setFacebookSn(ldapUser.facebook);
@@ -47,8 +48,9 @@ public class MyContactListener extends BaseModelListener<Contact>
 			contact.setIcqSn(ldapUser.gtalk);
 			contact.setAimSn(ldapUser.sip);
 			contact.setJabberSn(ldapUser.vhf);		
-			
+		 	
 		 	super.onBeforeCreate(contact);
+		 	}
 			_log.info("##### END  MyContactListener.onBeforeCreate : contact"+ contact );
 	 }
 	 public void onAfterCreate(Contact contact) throws ModelListenerException 

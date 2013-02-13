@@ -110,20 +110,21 @@ public class LDAPUtil
 		Hashtable env = new Hashtable(5, 0.75f);	
 		
 		DirContext ctx = null;
-		if( user!=null)_log.debug(" # "+user.getPasswordUnencrypted()  );
+		if( user!=null)_log.info(" # "+user.getPasswordUnencrypted()  );
 
 		// env.put(LdapContext.CONTROL_FACTORIES,
 		// conf.getProperty("ldap.factories.control"));
 		env.put(Context.INITIAL_CONTEXT_FACTORY,
 				"com.sun.jndi.ldap.LdapCtxFactory");
-		env.put(Context.PROVIDER_URL, LiferayUsersMapDAO.LDAP_URL );
+		//env.put(Context.PROVIDER_URL, LiferayUsersMapDAO.LDAP_URL );
 		env.put(Context.SECURITY_AUTHENTICATION, "simple");
+		env.put(Context.SECURITY_PROTOCOL, "ssl");
 		env.put(Context.SECURITY_PRINCIPAL,
 				//"cn=wfp-write,ou=ldapAccess,dc=emergency,dc=lu");
 				"uid="+user.getScreenName()+",ou=users,ou=people,dc=emergency,dc=lu");
 		//env.put(Context.SECURITY_CREDENTIALS, "My3CatsOnATree");
 		String pwd = LiferayUsersMapDAO.getPlainPassword( user.getUserId() );
-		_log.debug("##### pwd : plain : "+pwd );
+		_log.info("##### pwd : plain : "+pwd );
 		
 		env.put(Context.SECURITY_CREDENTIALS, pwd );
 		env.put(Context.STATE_FACTORIES, "PersonStateFactory");
@@ -142,10 +143,13 @@ public class LDAPUtil
 		{
 			/* get a handle to an Initial DirContext */
 			//DirContext ctx = new InitialDirContext(env);	
-			_log.info(" ############## END  LDAPUtil.getLDAPContext #####################");
+			_log.info(" xxxxxxxxxxxxxxxxxxxxxxxxxxxx");
 			ctx=  new InitialDirContext(env);
+			_log.info(" ############## END  LDAPUtil.getLDAPContext ##################### "+ctx );
+			
 		}
-		catch(Exception e){	//e.printStackTrace();
+		catch(Exception e){	e.printStackTrace();
+		_log.error(" Error"+ e );
 			
 		}
 		

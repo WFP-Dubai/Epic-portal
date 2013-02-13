@@ -7,14 +7,15 @@ acquire.increment=1
 ########## DEV ##############################
 #jdbc.url=jdbc:postgresql://localhost:5432/liferay-dev
 #user=kmohammed
-#password=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+#password=F2JcodZyf29KQNnJNa3T
 #ldap.url=ldaps://ldap-dev.globalepic.lu:636
 #######################################
 
 ########### QA ##############################
 #jdbc.url=jdbc:postgresql://localhost:5432/liferay-qa
 #user=kmohammed
-#password=xxxxxxxxxxxxxxxxxxxxxxx
+#password=+DUNDI4SafetyC0mm
+#password=BIXLvaiITvLic717JF42
 #ldap.url=ldaps://ldap-qa.globalepic.lu:636
 #######################################
 ########### LOCALHOST ##############################
@@ -26,7 +27,7 @@ acquire.increment=1
 ###############PRD############################
 jdbc.url=jdbc:postgresql://localhost:5432/liferay-portal
 user=kmohammed
-password=xxxxxxxxxxxxxxxxxxxxxxx
+password=3t8HdM?F%BXpDI*ET
 ldap.url=ldaps://ldap.globalepic.lu:636
 #######################################
 
